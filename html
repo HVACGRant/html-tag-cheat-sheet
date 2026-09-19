@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Dev Cheat Sheet</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --ink: #1b1f27;
+    --muted: #5d6675;
+    --line: #dfe3ea;
+    --accent: #c2410c;
+    --accent-soft: #ffedd5;
+    --code-bg: #f0f2f6;
+    --hit: #fde68a;
+    --warn: #b91c1c;
+    --warn-soft: #fee2e2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12151b;
+      --card: #1b2029;
+      --ink: #e7eaf0;
+      --muted: #97a1b3;
+      --line: #2c3340;
+      --accent: #fb923c;
+      --accent-soft: #3a2413;
+      --code-bg: #10131a;
+      --hit: #6b5a12;
+      --warn: #fca5a5;
+      --warn-soft: #3b1717;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px 64px; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--bg);
+    padding: 16px 0 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  h1 { font-size: 1.25rem; margin: 0 0 10px; letter-spacing: .01em; }
+  h1 span { color: var(--accent); font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+  .searchrow { position: relative; }
+  #q {
+    width: 100%;
+    font: inherit;
+    padding: 12px 84px 12px 14px;
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--ink);
+    outline: none;
+  }
+  #q:focus { border-color: var(--accent); }
+  .hint {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: .78rem; color: var(--muted);
+    pointer-events: none;
+  }
+  #clear {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    display: none;
+    border: 0; background: var(--code-bg); color: var(--ink);
+    border-radius: 6px; padding: 4px 10px; font: inherit; font-size: .85rem; cursor: pointer;
+  }
+  .searchrow.has-text #clear { display: block; }
+  .searchrow.has-text .hint { display: none; }
+
+  .tabs { display: flex; gap: 0; margin-top: 10px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; width: fit-content; max-width: 100%; }
+  .tab {
+    border: 0; border-right: 1px solid var(--line); background: var(--card); color: var(--ink);
+    padding: 6px 16px; font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer;
+  }
+  .tab:last-child { border-right: 0; }
+  .tab small { font-weight: 400; color: var(--muted); margin-left: 4px; }
+  .tab[aria-selected="true"] { background: var(--accent); color: #fff; }
+  .tab[aria-selected="true"] small { color: #fff; opacity: .85; }
+  .chips { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  .chip {
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font: inherit; font-size: .85rem;
+    cursor: pointer; flex: none;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .count { margin: 12px 0 4px; font-size: .85rem; color: var(--muted); }
+
+  .grid { display: grid; gap: 12px; margin-top: 8px; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+    min-width: 0;
+  }
+  .card.obsolete { border-color: var(--warn); }
+  .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .tag {
+    font: 700 1.15rem ui-monospace, Menlo, Consolas, monospace;
+    color: var(--accent);
+  }
+  .cat {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted);
+  }
+  .badge {
+    font-size: .7rem; font-weight: 700; text-transform: uppercase;
+    background: var(--warn-soft); color: var(--warn);
+    border-radius: 4px; padding: 1px 6px;
+  }
+  .def { margin: 0; }
+  .note { margin: 0; font-size: .88rem; color: var(--muted); }
+  .look { font-size: .82rem; color: var(--muted); }
+  .look b { font-weight: 600; color: var(--ink); }
+
+  .demo {
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    overflow-wrap: anywhere;
+  }
+  .demo > * { margin: 0; }
+  .demo table { border-collapse: collapse; }
+  .demo th, .demo td { border: 1px solid var(--line); padding: 2px 8px; }
+  .demo img, .demo svg, .demo canvas, .demo iframe { max-width: 100%; }
+  .sample { padding: 6px 10px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 6px; }
+  .k { display: inline-block; min-width: 36px; padding: 4px 10px; text-align: center; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 4px; }
+  .d-hover:hover { background: var(--accent); color: #fff; transform: translateY(-4px); }
+  @keyframes d-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  @media (prefers-reduced-motion: reduce) { .demo * { animation: none !important; transition: none !important; } }
+  .lang { font-weight: 700; color: var(--ink); }
+  .nrnote { font-size: .82rem; color: var(--muted); font-style: italic; }
+  .codebox { position: relative; }
+  pre.src {
+    margin: 0;
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 10px 64px 10px 10px;
+    font: .82rem/1.45 ui-monospace, Menlo, Consolas, monospace;
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .copy {
+    position: absolute; top: 6px; right: 6px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 6px; padding: 2px 8px; font: inherit; font-size: .75rem; cursor: pointer;
+  }
+
+  mark.hit { background: var(--hit); color: inherit; border-radius: 2px; }
+  .empty { text-align: center; color: var(--muted); padding: 48px 0; display: none; }
+  footer { margin-top: 32px; font-size: .8rem; color: var(--muted); text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Web dev <span>&lt;/&gt;</span> cheat sheet</h1>
+    <div class="searchrow" id="searchrow">
+      <input id="q" type="search" autocomplete="off" spellcheck="false"
+             placeholder="Search anything: table, flex, fetch, bold, center..." aria-label="Search tags">
+      <span class="hint">press /</span>
+      <button id="clear" type="button">Clear</button>
+    </div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Language"></div>
+    <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+  </header>
+
+  <div class="count" id="count" aria-live="polite"></div>
+  <main class="grid" id="grid"></main>
+  <div class="empty" id="empty">Nothing matches that search.</div>
+  <footer>Tip: press <b>/</b> to jump to search, <b>Esc</b> to clear it.</footer>
+</div>
+
+<script>
+// ---- DATA: add or edit tags here. Fields: tag, cat, def, ex (HTML shown/copied), demo (optional HTML rendered instead of ex),
+// look, note, kw (extra search words), alias (extra names for <tag> search), nr (true = do not render a live preview), obsolete
+const IMG = "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2260%22%20height=%2240%22%3E%3Crect%20width=%2260%22%20height=%2240%22%20rx=%224%22%20fill=%22%23c2410c%22/%3E%3C/svg%3E";
+const TAGS = [
+  // ===== Document =====
+  { tag: "html", cat: "Document", def: "The root element. Everything else lives inside it. Set the page language here with lang.",
+    look: "None", ex: `<html lang="en">\n  <head>...</head>\n  <body>...</body>\n</html>`, kw: "root lang document", nr: true },
+  { tag: "head", cat: "Document", def: "Container for page metadata: title, meta, links, styles. Not shown on the page.",
+    look: "Hidden", ex: `<head>\n  <meta charset="utf-8">\n  <title>My page</title>\n</head>`, kw: "metadata header invisible", nr: true },
+  { tag: "body", cat: "Document", def: "The visible content of the page.",
+    look: "Block, 8px margin", ex: `<body>\n  <h1>Hello</h1>\n</body>`, kw: "content page visible", nr: true },
+
+  // ===== Metadata =====
+  { tag: "title", cat: "Metadata", def: "The page title shown in the browser tab, bookmarks, and search results.",
+    look: "Hidden", ex: `<title>My Page</title>`, kw: "tab name bookmark seo", nr: true },
+  { tag: "meta", cat: "Metadata", def: "Metadata about the page: character set, viewport, description. Void element.",
+    look: "Hidden", note: "The viewport line is what makes a page work properly on phones.",
+    ex: `<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="description" content="Short summary">`, kw: "charset viewport description seo mobile void", nr: true },
+  { tag: "link", cat: "Metadata", def: "Links an external resource to the page, usually a stylesheet or icon. Void element.",
+    look: "Hidden", ex: `<link rel="stylesheet" href="style.css">\n<link rel="icon" href="favicon.ico">`, kw: "stylesheet css icon favicon void", nr: true },
+  { tag: "base", cat: "Metadata", def: "Sets the base URL that all relative links on the page resolve against. Void element.",
+    look: "Hidden", ex: `<base href="https://example.com/">`, kw: "url relative void", nr: true },
+  { tag: "style", cat: "Metadata", def: "Embedded CSS for the page.",
+    look: "Hidden", ex: `<style>\n  p { color: tomato; }\n</style>`, kw: "css stylesheet embedded", nr: true },
+
+  // ===== Sections =====
+  { tag: "header", cat: "Sections", def: "Intro content or navigation for the page or a section: logo, title, nav.",
+    look: "Block", ex: `<header>\n  <h1>Site name</h1>\n</header>`, kw: "top banner intro" },
+  { tag: "nav", cat: "Sections", def: "A block of major navigation links.",
+    look: "Block", ex: `<nav>\n  <a href="#">Home</a> | <a href="#">About</a>\n</nav>`, kw: "navigation menu links" },
+  { tag: "main", cat: "Sections", def: "The dominant content of the page. Only one visible main per page.",
+    look: "Block", ex: `<main>\n  <p>The page's main content.</p>\n</main>`, kw: "primary content landmark" },
+  { tag: "section", cat: "Sections", def: "A thematic group of content, usually with its own heading.",
+    look: "Block", ex: `<section>\n  <h2>Tips</h2>\n  <p>Content...</p>\n</section>`, kw: "group thematic chapter" },
+  { tag: "article", cat: "Sections", def: "Self-contained content that makes sense on its own: a post, news story, or comment.",
+    look: "Block", ex: `<article>\n  <h2>Blog post</h2>\n  <p>Text...</p>\n</article>`, kw: "post blog story comment" },
+  { tag: "aside", cat: "Sections", def: "Content tangential to the main content: sidebar, pull quote, callout.",
+    look: "Block", ex: `<aside>\n  <p>Related: see also...</p>\n</aside>`, kw: "sidebar callout tangent" },
+  { tag: "footer", cat: "Sections", def: "Footer for the page or a section: copyright, links, author info.",
+    look: "Block", ex: `<footer>\n  <p>&copy; 2026 My Site</p>\n</footer>`, kw: "bottom copyright" },
+  { tag: "hgroup", cat: "Sections", def: "Groups a heading with its subtitle or tagline.",
+    look: "Block", ex: `<hgroup>\n  <h2>Main title</h2>\n  <p>The subtitle</p>\n</hgroup>`, kw: "heading group subtitle tagline" },
+  { tag: "search", cat: "Sections", def: "Container for a search or filtering interface. Newer element.",
+    look: "Block", ex: `<search>\n  <input type="search" placeholder="Find...">\n</search>`, kw: "find filter landmark" },
+  { tag: "h1-h6", alias: ["h1", "h2", "h3", "h4", "h5", "h6"], cat: "Sections", def: "Headings, from most important (h1) to least (h6). Don't skip levels.",
+    look: "Bold, sized by level", ex: `<h1>Main title</h1>\n<h2>Section</h2>\n<h3>Subsection</h3>`, kw: "h1 h2 h3 h4 h5 h6 heading title header level" },
+
+  // ===== Grouping =====
+  { tag: "p", cat: "Grouping", def: "A paragraph of text.",
+    look: "Block with vertical margin", ex: `<p>A paragraph of text.</p>`, kw: "paragraph text" },
+  { tag: "div", cat: "Grouping", def: "Generic block container with no meaning. Use it for layout and styling hooks.",
+    look: "Block", ex: `<div class="box">Grouped content</div>`, demo: `<div style="padding:6px;background:rgba(194,65,12,.15)">Grouped content</div>`, kw: "division container block generic layout" },
+  { tag: "hr", cat: "Grouping", def: "A thematic break between paragraphs. Void element.",
+    look: "Horizontal line", ex: `<p>Above</p>\n<hr>\n<p>Below</p>`, kw: "horizontal rule line divider void" },
+  { tag: "figure", cat: "Grouping", def: "Self-contained content like an image, diagram, or code block, with an optional caption.",
+    look: "Indented block", ex: `<figure>\n  <img src="pic.jpg" alt="Condenser unit">\n  <figcaption>Fig 1. Condenser</figcaption>\n</figure>`,
+    demo: `<figure style="margin:0"><img src="${IMG}" alt="Condenser unit"><figcaption>Fig 1. Condenser</figcaption></figure>`, kw: "image caption diagram" },
+  { tag: "figcaption", cat: "Grouping", def: "The caption for a figure.",
+    look: "Block", ex: `<figure>\n  <pre>x = 1</pre>\n  <figcaption>Example</figcaption>\n</figure>`, kw: "caption figure" },
+
+  // ===== Lists =====
+  { tag: "ul", cat: "Lists", def: "Unordered (bulleted) list.",
+    look: "Bullets, indented", ex: `<ul>\n  <li>Coil</li>\n  <li>Fan</li>\n</ul>`, kw: "unordered bullets list" },
+  { tag: "ol", cat: "Lists", def: "Ordered (numbered) list. Attributes: start, reversed, type.",
+    look: "Numbers, indented", ex: `<ol start="3">\n  <li>Third</li>\n  <li>Fourth</li>\n</ol>`, kw: "ordered numbered list start reversed" },
+  { tag: "li", cat: "Lists", def: "A list item inside ul, ol, or menu.",
+    look: "List item", ex: `<ul>\n  <li>Item</li>\n</ul>`, kw: "item bullet" },
+  { tag: "dl", cat: "Lists", def: "Description list: terms paired with their descriptions.",
+    look: "Block", ex: `<dl>\n  <dt>Superheat</dt>\n  <dd>Temperature above saturation</dd>\n</dl>`, kw: "description definition glossary terms" },
+  { tag: "dt", cat: "Lists", def: "A term (name) in a description list.",
+    look: "Block", ex: `<dl>\n  <dt>Subcooling</dt>\n  <dd>Temperature below saturation</dd>\n</dl>`, kw: "term name description" },
+  { tag: "dd", cat: "Lists", def: "The description or value for a term in a description list.",
+    look: "Indented block", ex: `<dl>\n  <dt>Ton</dt>\n  <dd>12,000 BTU/hr</dd>\n</dl>`, kw: "description value definition" },
+  { tag: "menu", cat: "Lists", def: "Toolbar-style list of commands. Behaves like ul.",
+    look: "Bullets, indented", ex: `<menu>\n  <li><button type="button">Copy</button></li>\n  <li><button type="button">Paste</button></li>\n</menu>`, kw: "toolbar commands list" },
+
+  // ===== Links =====
+  { tag: "a", cat: "Links", def: "Anchor: a hyperlink. href is the destination.",
+    look: "Blue, underlined", note: "Use href=\"#id\" to jump to a section on the page and the download attribute to save a file.",
+    ex: `<a href="https://example.com" target="_blank" rel="noopener">Visit site</a>`, kw: "link hyperlink href anchor url target download" },
+
+  // ===== Tables =====
+  { tag: "table", cat: "Tables", def: "Tabular data arranged in rows and columns.",
+    look: "Block", ex: `<table>\n  <tr><th>Unit</th><th>Tons</th></tr>\n  <tr><td>A</td><td>3</td></tr>\n</table>`, kw: "grid rows columns data" },
+  { tag: "caption", cat: "Tables", def: "The title or caption of a table.",
+    look: "Centered above table", ex: `<table>\n  <caption>Units</caption>\n  <tr><td>A</td><td>3</td></tr>\n</table>`, kw: "table title" },
+  { tag: "thead", cat: "Tables", def: "Groups the header rows of a table.",
+    look: "Row group", ex: `<table>\n  <thead><tr><th>Unit</th></tr></thead>\n  <tbody><tr><td>A</td></tr></tbody>\n</table>`, kw: "table header group" },
+  { tag: "tbody", cat: "Tables", def: "Groups the body rows of a table.",
+    look: "Row group", ex: `<table>\n  <thead><tr><th>Unit</th></tr></thead>\n  <tbody><tr><td>A</td></tr></tbody>\n</table>`, kw: "table body group" },
+  { tag: "tfoot", cat: "Tables", def: "Groups the footer rows of a table, like totals.",
+    look: "Row group", ex: `<table>\n  <tbody><tr><td>3</td></tr><tr><td>4</td></tr></tbody>\n  <tfoot><tr><td>Total: 7</td></tr></tfoot>\n</table>`, kw: "table footer totals" },
+  { tag: "tr", cat: "Tables", def: "A row in a table.",
+    look: "Table row", ex: `<table>\n  <tr><td>Cell 1</td><td>Cell 2</td></tr>\n</table>`, kw: "table row" },
+  { tag: "th", cat: "Tables", def: "A header cell. Use scope=\"col\" or scope=\"row\" to say what it heads.",
+    look: "Bold, centered", ex: `<table>\n  <tr><th scope="col">Name</th><th scope="col">Qty</th></tr>\n</table>`, kw: "table header cell scope" },
+  { tag: "td", cat: "Tables", def: "A data cell. colspan and rowspan merge cells.",
+    look: "Table cell", ex: `<table>\n  <tr><td colspan="2">Merged cell</td></tr>\n  <tr><td>A</td><td>B</td></tr>\n</table>`, kw: "table cell data colspan rowspan merge" },
+  { tag: "colgroup", cat: "Tables", def: "Groups columns in a table so you can style them together.",
+    look: "Hidden", ex: `<table>\n  <colgroup>\n    <col style="background:#fde68a">\n    <col>\n  </colgroup>\n  <tr><td>A</td><td>B</td></tr>\n</table>`, kw: "table columns group" },
+  { tag: "col", cat: "Tables", def: "One column (or span of columns) inside a colgroup. Void element.",
+    look: "Hidden", ex: `<table>\n  <colgroup><col span="2" style="background:#fde68a"></colgroup>\n  <tr><td>A</td><td>B</td><td>C</td></tr>\n</table>`, kw: "table column span void" },
+
+  // ===== Forms =====
+  { tag: "form", cat: "Forms", def: "Wraps form controls. action is where it submits, method is GET or POST.",
+    look: "Block", ex: `<form action="/send" method="post">\n  <input name="email" placeholder="Email">\n  <button>Send</button>\n</form>`, kw: "submit post get action input" },
+  { tag: "label", cat: "Forms", def: "Caption for a form control. Clicking it focuses the control.",
+    look: "Inline", ex: `<label for="demo-name">Name</label>\n<input id="demo-name">`, kw: "caption input for" },
+  { tag: "input", cat: "Forms", def: "A form control. The type attribute picks the kind. Void element.",
+    look: "Depends on type", note: "Types: text, email, password, number, checkbox, radio, range, date, color, file, search, tel, url, hidden, submit.",
+    ex: `<input type="text" placeholder="Type here">\n<input type="checkbox"> <input type="range">`, kw: "text email password number checkbox radio range date color file field void" },
+  { tag: "button", cat: "Forms", def: "A clickable button. type is submit, reset, or button.",
+    look: "Button", ex: `<button type="button">Click me</button>`, kw: "click submit reset" },
+  { tag: "select", cat: "Forms", def: "A dropdown list of options.",
+    look: "Dropdown", ex: `<select>\n  <option>Cool</option>\n  <option>Heat</option>\n</select>`, kw: "dropdown menu choose" },
+  { tag: "option", cat: "Forms", def: "One choice inside a select, optgroup, or datalist.",
+    look: "Menu item", ex: `<select>\n  <option value="c">Cool</option>\n  <option value="h" selected>Heat</option>\n</select>`, kw: "choice select value" },
+  { tag: "optgroup", cat: "Forms", def: "Groups related options inside a select under a label.",
+    look: "Bold group label", ex: `<select>\n  <optgroup label="Modes">\n    <option>Cool</option>\n    <option>Heat</option>\n  </optgroup>\n</select>`, kw: "group select options" },
+  { tag: "datalist", cat: "Forms", def: "Suggested values for an input. Link it with the input's list attribute.",
+    look: "Hidden", ex: `<input list="demo-list">\n<datalist id="demo-list">\n  <option value="R-410A">\n  <option value="R-22">\n</datalist>`, kw: "autocomplete suggestions" },
+  { tag: "textarea", cat: "Forms", def: "Multi-line text input. Size it with rows and cols.",
+    look: "Multi-line box", ex: `<textarea rows="3" cols="24">Notes...</textarea>`, kw: "multiline text box notes" },
+  { tag: "fieldset", cat: "Forms", def: "Groups related form controls, drawn with a border.",
+    look: "Bordered box", ex: `<fieldset>\n  <legend>Mode</legend>\n  <label><input type="radio" name="m"> Cool</label>\n  <label><input type="radio" name="m"> Heat</label>\n</fieldset>`, kw: "group controls border" },
+  { tag: "legend", cat: "Forms", def: "The caption for a fieldset.",
+    look: "Title on the border", ex: `<fieldset>\n  <legend>Options</legend>\n  <label><input type="checkbox"> Enable</label>\n</fieldset>`, kw: "fieldset caption title" },
+  { tag: "output", cat: "Forms", def: "Displays the result of a calculation or user action.",
+    look: "Inline", ex: `<output>42</output>`, kw: "result calculation" },
+  { tag: "progress", cat: "Forms", def: "A progress bar showing how far along a task is.",
+    look: "Progress bar", ex: `<progress value="70" max="100">70%</progress>`, kw: "bar loading percent" },
+  { tag: "meter", cat: "Forms", def: "A gauge for a value within a known range, like disk usage.",
+    look: "Gauge bar", ex: `<meter value="0.6">60%</meter>`, kw: "gauge range level" },
+
+  // ===== Media =====
+  { tag: "img", cat: "Media", def: "An image. alt text is required for accessibility. Void element.",
+    look: "Inline image", ex: `<img src="photo.jpg" alt="Condenser unit" width="60">`,
+    demo: `<img src="${IMG}" alt="Condenser unit" width="60">`, kw: "image picture photo alt src void" },
+  { tag: "picture", cat: "Media", def: "Lets the browser choose between image versions by screen size or format.",
+    look: "Inline image", ex: `<picture>\n  <source srcset="wide.webp" media="(min-width:800px)">\n  <img src="small.jpg" alt="Condenser unit">\n</picture>`,
+    demo: `<picture><img src="${IMG}" alt="Condenser unit" width="60"></picture>`, kw: "responsive image webp srcset" },
+  { tag: "source", cat: "Media", def: "An alternate resource for picture, audio, or video. Void element.",
+    look: "Hidden", ex: `<video controls>\n  <source src="clip.webm" type="video/webm">\n  <source src="clip.mp4" type="video/mp4">\n</video>`, kw: "media alternate format void", nr: true },
+  { tag: "audio", cat: "Media", def: "Embedded sound player.",
+    look: "Player controls", ex: `<audio controls src="sound.mp3"></audio>`, demo: `<audio controls></audio>`, kw: "sound music player mp3" },
+  { tag: "video", cat: "Media", def: "Embedded video player.",
+    look: "Video box", ex: `<video controls width="240" src="clip.mp4"></video>`, demo: `<video controls width="240" height="60"></video>`, kw: "movie player mp4" },
+  { tag: "track", cat: "Media", def: "Subtitles or captions for audio or video. Void element.",
+    look: "Hidden", ex: `<video controls src="clip.mp4">\n  <track kind="subtitles" src="en.vtt" srclang="en" label="English">\n</video>`, kw: "subtitles captions vtt void", nr: true },
+  { tag: "map", cat: "Media", def: "Defines a clickable image map. Pair with area elements.",
+    look: "Hidden", ex: `<img src="floor.png" usemap="#rooms" alt="Floor plan">\n<map name="rooms">\n  <area shape="rect" coords="0,0,50,50" href="#a" alt="Room A">\n</map>`, kw: "image map clickable regions", nr: true },
+  { tag: "area", cat: "Media", def: "A clickable region inside a map. Void element.",
+    look: "Hidden", ex: `<area shape="circle" coords="25,25,20" href="#a" alt="Room A">`, kw: "image map region hotspot void", nr: true },
+  { tag: "iframe", cat: "Media", def: "Embeds another web page inside this one.",
+    look: "Boxed frame", ex: `<iframe src="https://example.com" width="300" height="150" title="Example"></iframe>`,
+    demo: `<iframe srcdoc="<p style='font-family:sans-serif;margin:8px'>Embedded page</p>" width="240" height="60" title="Demo"></iframe>`, kw: "embed page frame youtube map inline" },
+  { tag: "embed", cat: "Media", def: "Embeds external content such as a plugin or media. Void element.",
+    look: "Boxed content", ex: `<embed src="doc.pdf" type="application/pdf" width="300" height="200">`, kw: "external plugin pdf void", nr: true },
+  { tag: "object", cat: "Media", def: "Embeds an external resource: image, PDF, or nested page. Content inside is the fallback.",
+    look: "Boxed content", ex: `<object data="doc.pdf" type="application/pdf" width="300" height="200">\n  Fallback text\n</object>`, kw: "external embed pdf fallback", nr: true },
+  { tag: "param", cat: "Media", def: "Passes a parameter to an object element. Void element.",
+    look: "Hidden", ex: `<object data="movie.swf">\n  <param name="autoplay" value="true">\n</object>`, kw: "parameter object void", nr: true },
+  { tag: "svg", cat: "Media", def: "Inline vector graphics drawn with shapes and paths.",
+    look: "Graphic", ex: `<svg width="60" height="40">\n  <circle cx="20" cy="20" r="16" fill="tomato"/>\n</svg>`, kw: "vector graphic shape circle path icon" },
+  { tag: "math", cat: "Media", def: "Inline mathematical notation (MathML).",
+    look: "Math layout", ex: `<math>\n  <mfrac><mi>a</mi><mi>b</mi></mfrac>\n</math>`, kw: "mathml formula fraction equation" },
+
+  // ===== Interactive =====
+  { tag: "details", cat: "Interactive", def: "A disclosure widget: content the user can expand and collapse. Add open to start expanded.",
+    look: "Triangle toggle", ex: `<details>\n  <summary>More info</summary>\n  <p>Hidden until opened.</p>\n</details>`, kw: "collapse expand accordion toggle spoiler" },
+  { tag: "summary", cat: "Interactive", def: "The always-visible label for a details element.",
+    look: "Clickable label", ex: `<details>\n  <summary>Click to open</summary>\n  <p>Extra content.</p>\n</details>`, kw: "details label toggle" },
+  { tag: "dialog", cat: "Interactive", def: "A dialog box or popup. Open it with JavaScript (show, showModal) or the open attribute.",
+    look: "Bordered box", ex: `<dialog open>\n  <p>Hello!</p>\n</dialog>`, demo: `<dialog open style="position:static;margin:0"><p>Hello!</p></dialog>`, kw: "popup modal window" },
+
+  // ===== Scripting =====
+  { tag: "script", cat: "Scripting", def: "Embeds or loads JavaScript.",
+    look: "Hidden", ex: `<script src="app.js"><\/script>\n<script>\n  console.log("hi");\n<\/script>`, kw: "javascript js code", nr: true },
+  { tag: "noscript", cat: "Scripting", def: "Content shown only when JavaScript is off or unsupported.",
+    look: "Hidden when JS on", ex: `<noscript>Please enable JavaScript.</noscript>`, kw: "javascript fallback disabled", nr: true },
+  { tag: "template", cat: "Scripting", def: "Holds inert HTML that JavaScript can clone and insert later.",
+    look: "Hidden", ex: `<template id="row">\n  <li>New item</li>\n</template>`, kw: "clone inert javascript reuse", nr: true },
+  { tag: "slot", cat: "Scripting", def: "A placeholder inside a web component shadow tree where outside content plugs in.",
+    look: "None", ex: `<slot name="title">Default title</slot>`, kw: "web component shadow dom custom element", nr: true },
+  { tag: "canvas", cat: "Scripting", def: "A bitmap drawing surface controlled by JavaScript. Used for games and charts.",
+    look: "Blank box", note: "Draw on it with getContext(\"2d\") or WebGL.",
+    ex: `<canvas id="game" width="300" height="150"></canvas>`, demo: `<canvas width="120" height="50" style="border:1px solid #888"></canvas>`, kw: "draw game graphics webgl 2d three.js" },
+
+  // Emphasis & importance
+  { tag: "b", cat: "Emphasis", def: "Draws attention to text, like keywords or product names, without adding importance.",
+    look: "Bold", note: "Bold is just the default look. For pure styling use CSS font-weight.",
+    ex: "<p>The <b>compressor</b> failed.</p>", kw: "bold boldface keyword attention" },
+  { tag: "strong", cat: "Emphasis", def: "Marks strong importance, seriousness, or urgency. Screen readers stress it.",
+    look: "Bold", ex: "<p><strong>Warning:</strong> disconnect power first.</p>", kw: "important bold warning" },
+  { tag: "i", cat: "Emphasis", def: "Text in an alternate voice or mood: foreign phrases, technical terms, thoughts, ship names.",
+    look: "Italic", note: "Does not set the language by itself. Add lang, for example lang=\"fr\", to specify it.",
+    ex: "<p>The French say <i lang=\"fr\">c'est la vie</i>.</p>", kw: "italic language french spanish foreign lang" },
+  { tag: "em", cat: "Emphasis", def: "Stress emphasis on a word. Moving it changes the meaning of the sentence.",
+    look: "Italic", ex: "<p>I said <em>you</em> could go, not <em>him</em>.</p>", kw: "emphasis stress italic meaning" },
+  { tag: "mark", cat: "Emphasis", def: "Highlights text for reference or relevance, like a search hit.",
+    look: "Yellow highlight", ex: "<p>Check the <mark>superheat</mark> reading.</p>", kw: "highlight yellow" },
+  { tag: "small", cat: "Emphasis", def: "Side comments and fine print: copyright, legal notes, disclaimers.",
+    look: "Smaller text", ex: "<p>Price $99 <small>(tax not included)</small></p>", kw: "fine print disclaimer" },
+  { tag: "u", cat: "Emphasis", def: "Unarticulated annotation, such as marking a misspelling. Not for links or general emphasis.",
+    look: "Underline", ex: "<p>I <u>recieved</u> the part.</p>", kw: "underline misspelling" },
+
+  // Edits
+  { tag: "del", cat: "Edits", def: "Content that was deleted from the document.",
+    look: "Strikethrough", note: "Accepts datetime and cite attributes.",
+    ex: "<p>Price: <del>$120</del></p>", kw: "delete deleted strikethrough remove" },
+  { tag: "ins", cat: "Edits", def: "Content that was inserted into the document.",
+    look: "Underline", ex: "<p>Price: <del>$120</del> <ins>$99</ins></p>", kw: "insert inserted added underline" },
+  { tag: "s", cat: "Edits", def: "Text that is no longer accurate or relevant, but was not deleted.",
+    look: "Strikethrough", ex: "<p><s>Sold out</s> Back in stock!</p>", kw: "strike strikethrough outdated" },
+
+  // Position
+  { tag: "sub", cat: "Position", def: "Subscript text, like chemical formulas.",
+    look: "Lowered, smaller", ex: "<p>H<sub>2</sub>O</p>", kw: "subscript below chemistry" },
+  { tag: "sup", cat: "Position", def: "Superscript text, like exponents and footnote markers.",
+    look: "Raised, smaller", ex: "<p>E = mc<sup>2</sup></p>", kw: "superscript above exponent power footnote" },
+
+  // Code & computing
+  { tag: "code", cat: "Code", def: "A fragment of computer code.",
+    look: "Monospace", ex: "<p>Run <code>npm start</code> to begin.</p>", kw: "monospace inline programming" },
+  { tag: "kbd", cat: "Code", def: "Keyboard (or other) input the user types.",
+    look: "Monospace", ex: "<p>Press <kbd>Ctrl</kbd> + <kbd>S</kbd> to save.</p>", kw: "keyboard key shortcut" },
+  { tag: "samp", cat: "Code", def: "Sample output from a program or system.",
+    look: "Monospace", ex: "<p><samp>Error 404: Not Found</samp></p>", kw: "sample output result terminal" },
+  { tag: "var", cat: "Code", def: "A variable in math or programming.",
+    look: "Italic", ex: "<p>Solve for <var>x</var>.</p>", kw: "variable math" },
+  { tag: "pre", cat: "Code", def: "Preformatted text. Keeps whitespace and line breaks exactly as typed.",
+    look: "Monospace, block", ex: "<pre>line 1\n    indented\nline 3</pre>", kw: "preformatted whitespace block ascii" },
+
+  // Quotes & references
+  { tag: "q", cat: "Quotes & refs", def: "Short inline quotation. The browser adds the quote marks.",
+    look: "Quote marks", ex: "<p>She said <q>be brief</q> and left.</p>", kw: "quote quotation inline" },
+  { tag: "blockquote", cat: "Quotes & refs", def: "Longer quotation set off as its own block. Use the cite attribute for the source URL.",
+    look: "Indented block", ex: "<blockquote>Any sufficiently long quote goes here.</blockquote>", kw: "quote quotation block indent" },
+  { tag: "cite", cat: "Quotes & refs", def: "The title of a creative work: book, film, song, game.",
+    look: "Italic", note: "Titles only, not the name of the person quoted.",
+    ex: "<p>I finished <cite>Moby-Dick</cite> last week.</p>", kw: "citation title book source reference" },
+  { tag: "abbr", cat: "Quotes & refs", def: "An abbreviation or acronym. The title attribute holds the full form and shows on hover.",
+    look: "Dotted underline (some browsers)", ex: "<p><abbr title=\"Heating, Ventilation, and Air Conditioning\">HVAC</abbr> tech</p>", kw: "abbreviation acronym title hover" },
+  { tag: "dfn", cat: "Quotes & refs", def: "The defining instance of a term, where it is first explained.",
+    look: "Italic", ex: "<p><dfn>Superheat</dfn> is temperature above saturation.</p>", kw: "definition define term" },
+  { tag: "address", cat: "Quotes & refs", def: "Contact information for the page or a section's author.",
+    look: "Italic, block", ex: "<address>Contact: <a href=\"mailto:you@example.com\">you@example.com</a></address>", kw: "contact email author" },
+
+  // Data
+  { tag: "time", cat: "Data", def: "A date or time. The datetime attribute gives the machine-readable value.",
+    look: "None", ex: "<p>Posted <time datetime=\"2026-09-18\">Sept 18</time></p>", kw: "date datetime clock timestamp" },
+  { tag: "data", cat: "Data", def: "Links content to a machine-readable value in the value attribute.",
+    look: "None", ex: "<p><data value=\"398\">Mini Widget</data></p>", kw: "value machine readable" },
+
+  // Language & direction
+  { tag: "bdi", cat: "Language & direction", def: "Bidirectional isolate: keeps text of unknown direction from messing up the text around it.",
+    look: "None", ex: "<p>User <bdi>محمد</bdi>: 5 points</p>", kw: "bidirectional rtl ltr arabic hebrew direction isolate" },
+  { tag: "bdo", cat: "Language & direction", def: "Bidirectional override: forces a text direction using the dir attribute.",
+    look: "Direction changes", ex: "<p><bdo dir=\"rtl\">Hello world</bdo></p>", kw: "bidirectional override rtl ltr dir reverse" },
+  { tag: "ruby", cat: "Language & direction", def: "Wrapper for a ruby annotation: pronunciation help for East Asian characters.",
+    look: "Small text above", ex: "<ruby>漢<rp>(</rp><rt>kan</rt><rp>)</rp></ruby>", kw: "annotation furigana chinese japanese korean pronunciation" },
+  { tag: "rt", cat: "Language & direction", def: "The pronunciation text inside a ruby element.",
+    look: "Small text above", ex: "<ruby>字<rt>ji</rt></ruby>", kw: "ruby text pronunciation" },
+  { tag: "rp", cat: "Language & direction", def: "Fallback parentheses shown only when the browser doesn't support ruby.",
+    look: "Hidden", ex: "<ruby>字<rp>(</rp><rt>ji</rt><rp>)</rp></ruby>", kw: "ruby parenthesis fallback" },
+
+  // Layout helpers
+  { tag: "br", cat: "Helpers", def: "A line break. Void element, no closing tag.",
+    look: "New line", note: "For a paragraph gap use separate p elements or CSS margin instead.",
+    ex: "<p>Line one<br>Line two</p>", kw: "break newline void" },
+  { tag: "wbr", cat: "Helpers", def: "A spot where the browser may break a long word if it needs to. Void element.",
+    look: "None", ex: "<p>super<wbr>cali<wbr>fragilistic<wbr>expialidocious</p>", kw: "word break long url wrap" },
+  { tag: "span", cat: "Helpers", def: "Generic inline container with no meaning. Use it to hang CSS or JS on part of a line.",
+    look: "None", ex: "<p>Status: <span style=\"color:#c2410c;font-weight:700\">OFFLINE</span></p>", kw: "generic inline container style class" },
+
+  // Obsolete
+  { tag: "big", cat: "Obsolete", def: "Made text larger. Removed from HTML5.", note: "Use CSS font-size, or a heading.",
+    ex: "<p><big>Big text</big></p>", kw: "deprecated bigger size", obsolete: true },
+  { tag: "center", cat: "Obsolete", def: "Centered its contents. Removed from HTML5.", note: "Use CSS text-align: center.",
+    ex: "<center>Centered</center>", kw: "deprecated align middle", obsolete: true },
+  { tag: "font", cat: "Obsolete", def: "Set font face, size, and color. Removed from HTML5.", note: "Use CSS font-family, font-size, and color.",
+    ex: "<font color=\"red\" size=\"4\">Old school</font>", kw: "deprecated color face size", obsolete: true },
+  { tag: "strike", cat: "Obsolete", def: "Struck-through text. Removed from HTML5.", note: "Use s or del.",
+    ex: "<p><strike>Old price</strike></p>", kw: "deprecated strikethrough", obsolete: true },
+  { tag: "tt", cat: "Obsolete", def: "Teletype (monospace) text. Removed from HTML5.", note: "Use code, kbd, or samp.",
+    ex: "<p><tt>monospace</tt></p>", kw: "deprecated teletype monospace", obsolete: true },
+  { tag: "acronym", cat: "Obsolete", def: "Marked an acronym. Removed from HTML5.", note: "Use abbr.",
+    ex: "<p><acronym title=\"Refrigerant\">R-410A</acronym></p>", kw: "deprecated abbreviation", obsolete: true },
+  { tag: "marquee", cat: "Obsolete", def: "Scrolling text. Removed from HTML5.", note: "Use CSS animation.",
+    ex: `<marquee>Scrolling text</marquee>`, kw: "deprecated scroll animation", obsolete: true, nr: true },
+  { tag: "blink", cat: "Obsolete", def: "Blinking text. Never standardized and no longer works.", note: "Use CSS animation, sparingly.",
+    ex: `<blink>Blinking</blink>`, kw: "deprecated flash animation", obsolete: true, nr: true },
+  { tag: "frame", cat: "Obsolete", def: "One pane inside a frameset. Removed from HTML5.", note: "Use iframe.",
+    ex: `<frameset cols="50%,50%">\n  <frame src="a.html">\n  <frame src="b.html">\n</frameset>`, kw: "deprecated frames pane", obsolete: true, nr: true },
+  { tag: "frameset", cat: "Obsolete", def: "Split the window into frames. Removed from HTML5.", note: "Use CSS layout and iframe.",
+    ex: `<frameset cols="50%,50%">\n  <frame src="a.html">\n  <frame src="b.html">\n</frameset>`, kw: "deprecated frames layout", obsolete: true, nr: true },
+  { tag: "noframes", cat: "Obsolete", def: "Fallback for browsers without frames. Removed from HTML5.",
+    ex: `<noframes>Your browser doesn't support frames.</noframes>`, kw: "deprecated frames fallback", obsolete: true, nr: true },
+  { tag: "applet", cat: "Obsolete", def: "Embedded a Java applet. Removed from HTML5.", note: "Java applets are dead. Use modern web tech.",
+    ex: `<applet code="Game.class" width="300" height="200"></applet>`, kw: "deprecated java plugin", obsolete: true, nr: true },
+  { tag: "dir", cat: "Obsolete", def: "Directory list. Removed from HTML5.", note: "Use ul.",
+    ex: `<dir>\n  <li>Item</li>\n</dir>`, kw: "deprecated directory list", obsolete: true },
+  { tag: "basefont", cat: "Obsolete", def: "Set a default font for the page. Removed from HTML5.", note: "Use CSS on body.",
+    ex: `<basefont face="Arial" size="3">`, kw: "deprecated font default", obsolete: true, nr: true },
+  { tag: "nobr", cat: "Obsolete", def: "Prevented line breaks inside its content. Never standardized.", note: "Use CSS white-space: nowrap.",
+    ex: `<nobr>No line breaks in here</nobr>`, kw: "deprecated no break nowrap", obsolete: true }
+];
+
+// ---- helpers for CSS and JS entries
+const css = (tag, cat, def, ex, kw, o) => Object.assign({ lang: "css", tag, cat, def, ex, kw: kw || "" }, o);
+const js  = (tag, cat, def, ex, kw, o) => Object.assign({ lang: "js",  tag, cat, def, ex, kw: kw || "" }, o);
+
+// ===================== CSS =====================
+const CSS_DATA = [
+  // ----- Box model -----
+  css("margin", "Box model", "Space outside an element's border. One value sets all sides, two set vertical then horizontal, four go clockwise from the top.",
+    `margin: 12px 24px;`, "outside space spacing auto center gap", { note: "margin: 0 auto centers a block that has a width." }),
+  css("padding", "Box model", "Space between an element's content and its border.",
+    `padding: 12px 24px;`, "inside space spacing inner"),
+  css("border", "Box model", "Border shorthand: width, style, color.",
+    `border: 3px dashed tomato;`, "outline line width style color solid dashed dotted"),
+  css("border-radius", "Box model", "Rounds the corners. 50% turns a square into a circle.",
+    `border-radius: 16px;`, "rounded corners circle round pill"),
+  css("box-sizing", "Box model", "Whether width and height include padding and border. border-box is usually what you want.",
+    `box-sizing: border-box;\nwidth: 100%;\npadding: 12px;`, "width padding border content-box reset", { note: "Common reset: *, *::before, *::after { box-sizing: border-box; }" }),
+  css("width / height", "Box model", "Sets the size of an element. Accepts px, %, rem, vw, vh, or auto.",
+    `width: 60%;\nheight: 50px;`, "size dimensions"),
+  css("min-width / max-width", "Box model", "Limits how small or large an element can get. max-width keeps images and text from overflowing. Also min-height and max-height.",
+    `max-width: 160px;`, "limit size responsive min-height max-height"),
+  css("outline", "Box model", "A line drawn outside the border that takes up no space. Used for focus rings.",
+    `outline: 2px dashed tomato;\noutline-offset: 3px;`, "focus ring"),
+  css("box-shadow", "Box model", "Adds a shadow: x, y, blur, spread, color. Add inset for an inner shadow.",
+    `box-shadow: 0 4px 12px rgba(0,0,0,.35);`, "drop shadow glow elevation"),
+  css("overflow", "Box model", "What happens to content that doesn't fit: visible, hidden, scroll, or auto.",
+    `overflow: auto;\nheight: 44px;`, "scroll hidden clip scrollbar",
+    { demo: `<div class="sample" style="overflow:auto;height:44px">Line one<br>Line two<br>Line three<br>Line four</div>` }),
+
+  // ----- Layout -----
+  css("display", "Layout", "How an element is laid out: block, inline, inline-block, flex, grid, or none (removes it).",
+    `display: inline-block;`, "block inline none hide show flex grid"),
+  css("position", "Layout", "Positioning mode: static (default), relative, absolute, fixed, or sticky. Offsets use top, right, bottom, left.",
+    `position: absolute;\ntop: 6px;\nright: 6px;`, "absolute relative fixed sticky offset",
+    { demo: `<div style="position:relative;height:64px;border:1px solid var(--line)"><div class="sample" style="position:absolute;top:6px;right:6px">absolute</div></div>`,
+      note: "An absolute element positions against its nearest positioned ancestor (usually one with position: relative)." }),
+  css("inset", "Layout", "Shorthand for top, right, bottom, and left. inset: 0 stretches an absolute element to fill its container.",
+    `position: absolute;\ninset: 0;`, "top right bottom left fill cover overlay",
+    { demo: `<div style="position:relative;height:64px;border:1px solid var(--line)"><div class="sample" style="position:absolute;inset:8px">inset: 8px</div></div>` }),
+  css("z-index", "Layout", "Stacking order of positioned elements. Higher numbers sit on top.",
+    `position: absolute;\nz-index: 10;`, "stack layer order front back",
+    { demo: `<div style="position:relative;height:64px"><div class="sample" style="position:absolute;left:0;top:0;z-index:1">z-index: 1</div><div class="sample" style="position:absolute;left:34px;top:22px;background:var(--card)">z-index: auto</div></div>` }),
+  css("float", "Layout", "Pushes an element left or right so text wraps around it. Undo with clear. Mostly replaced by flex and grid.",
+    `float: right;`, "wrap text clear left right",
+    { demo: `<div style="overflow:hidden"><span class="sample" style="float:right">float: right</span>Text wraps around a floated element like this one.</div>` }),
+  css("display: flex", "Layout", "Makes an element a flex container. Its children become flex items laid out in a row.",
+    `display: flex;`, "flexbox row container items", { kids: 3 }),
+  css("flex-direction", "Layout", "Direction of the flex main axis: row, row-reverse, column, column-reverse.",
+    `display: flex;\nflex-direction: column;`, "flexbox column row vertical horizontal", { kids: 3 }),
+  css("justify-content", "Layout", "Aligns flex or grid items along the main axis: flex-start, center, space-between, space-around, space-evenly.",
+    `display: flex;\njustify-content: space-between;`, "flexbox center space between align horizontal", { kids: 3 }),
+  css("align-items", "Layout", "Aligns flex or grid items along the cross axis: stretch, center, flex-start, flex-end, baseline.",
+    `display: flex;\nalign-items: center;\nheight: 70px;`, "flexbox center vertical align", { kids: 3 }),
+  css("flex-wrap", "Layout", "Lets flex items wrap onto new lines instead of shrinking.",
+    `display: flex;\nflex-wrap: wrap;`, "flexbox wrap lines", { kids: 14 }),
+  css("gap", "Layout", "Space between flex or grid items. Also row-gap and column-gap.",
+    `display: flex;\ngap: 20px;`, "spacing flexbox grid row-gap column-gap", { kids: 3 }),
+  css("flex", "Layout", "Flex item shorthand: grow, shrink, basis. flex: 1 makes items share space equally.",
+    `flex: 1;`, "flexbox grow shrink basis fill space",
+    { demo: `<div style="display:flex;gap:6px"><span class="k" style="flex:1">flex: 1</span><span class="k">auto</span><span class="k" style="flex:2">flex: 2</span></div>` }),
+  css("order", "Layout", "Changes the visual order of flex or grid items without changing the HTML.",
+    `order: 2;`, "flexbox reorder sequence",
+    { demo: `<div style="display:flex;gap:6px"><span class="k" style="order:3">1 (order 3)</span><span class="k">2</span><span class="k" style="order:-1">3 (order -1)</span></div>` }),
+  css("align-self", "Layout", "Overrides align-items for a single flex or grid item.",
+    `align-self: flex-end;`, "flexbox single item align",
+    { demo: `<div style="display:flex;gap:6px;height:64px"><span class="k">1</span><span class="k" style="align-self:flex-end">2 (end)</span><span class="k" style="align-self:center">3 (center)</span></div>` }),
+  css("grid-template-columns", "Layout", "Defines grid columns. fr units share the free space. repeat() saves typing.",
+    `display: grid;\ngrid-template-columns: 1fr 1fr 1fr;\ngap: 8px;`, "grid columns fr repeat auto-fit minmax layout", { kids: 6,
+      note: "Responsive cards: repeat(auto-fit, minmax(160px, 1fr))" }),
+  css("grid-template-rows", "Layout", "Defines grid rows. Rows are created automatically if you don't set them.",
+    `display: grid;\ngrid-template-rows: 30px 50px;`, "grid rows", { kids: 4 }),
+  css("grid-column / grid-row", "Layout", "Places or spans a grid item across columns or rows, like grid-column: span 2.",
+    `grid-column: span 2;`, "grid span place item",
+    { demo: `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><span class="k" style="grid-column:span 2">span 2</span><span class="k">2</span><span class="k">3</span><span class="k" style="grid-column:span 2">span 2</span></div>` }),
+  css("grid-template-areas", "Layout", "Names regions of a grid so you can place items by name with grid-area.",
+    `grid-template-areas:\n  "header header"\n  "nav    main"\n  "footer footer";`, "grid layout named areas holy grail",
+    { nr: "Layout only. No live preview, code only.", note: "Then give each child a grid-area: header; and so on." }),
+  css("place-items", "Layout", "Shorthand for align-items and justify-items. place-items: center centers content in a grid.",
+    `display: grid;\nplace-items: center;\nheight: 70px;`, "grid center middle", { kids: 1 }),
+  css("aspect-ratio", "Layout", "Keeps an element at a fixed width-to-height ratio.",
+    `aspect-ratio: 16 / 9;\nwidth: 60%;`, "ratio video square 16:9"),
+  css("object-fit", "Layout", "How an image or video fills its box: cover, contain, fill, none.",
+    `object-fit: cover;\nwidth: 100px;\nheight: 60px;`, "image cover contain crop fit",
+    { demo: `<img src="${IMG}" alt="" style="width:100px;height:60px;object-fit:cover;border:1px solid var(--line)">` }),
+  css("visibility", "Layout", "visibility: hidden hides an element but keeps its space. display: none removes it entirely.",
+    `visibility: hidden;`, "hide show invisible",
+    { demo: `<p style="margin:0">Before <span class="sample" style="visibility:hidden">hidden</span> after (space stays)</p>` }),
+
+  // ----- Text -----
+  css("color", "Text", "Text color. Accepts names, hex, rgb(), hsl().",
+    `color: tomato;`, "text font colour"),
+  css("font-family", "Text", "Font stack. List fallbacks and end with a generic family like serif, sans-serif, or monospace.",
+    `font-family: Georgia, serif;`, "font typeface stack"),
+  css("font-size", "Text", "Text size. Prefer rem or em over px so it scales with user settings.",
+    `font-size: 22px;`, "text size rem em"),
+  css("font-weight", "Text", "Boldness: normal (400), bold (700), or any number 100 to 900.",
+    `font-weight: 700;`, "bold thin light heavy"),
+  css("font-style", "Text", "normal, italic, or oblique.",
+    `font-style: italic;`, "italic slant"),
+  css("line-height", "Text", "Space between lines. A unitless number like 1.5 is best.",
+    `line-height: 2;`, "leading spacing lines",
+    { demo: `<p class="sample" style="line-height:2">Line height controls the space between lines of text. A unitless number scales with font size.</p>` }),
+  css("letter-spacing", "Text", "Space between letters. Also word-spacing for words.",
+    `letter-spacing: 3px;`, "tracking kerning spacing word-spacing"),
+  css("text-align", "Text", "Horizontal alignment of text: left, right, center, justify.",
+    `text-align: center;`, "center align justify left right"),
+  css("text-decoration", "Text", "Underline, overline, line-through, with optional style and color. text-decoration: none removes link underlines.",
+    `text-decoration: underline wavy tomato;`, "underline strikethrough link none"),
+  css("text-transform", "Text", "Changes case: uppercase, lowercase, capitalize.",
+    `text-transform: uppercase;`, "uppercase lowercase capitalize caps"),
+  css("text-shadow", "Text", "Shadow behind text: x, y, blur, color.",
+    `text-shadow: 2px 2px 4px rgba(0,0,0,.4);`, "glow outline shadow"),
+  css("white-space", "Text", "Controls wrapping and whitespace: normal, nowrap, pre, pre-wrap.",
+    `white-space: nowrap;`, "wrap nowrap pre newline",
+    { demo: `<div class="sample" style="white-space:nowrap;overflow:hidden">This long line will not wrap onto a second line at all</div>` }),
+  css("text-overflow", "Text", "Shows an ellipsis when text is cut off. Needs overflow: hidden and white-space: nowrap.",
+    `overflow: hidden;\nwhite-space: nowrap;\ntext-overflow: ellipsis;`, "ellipsis truncate dots cut",
+    { demo: `<div class="sample" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;width:140px">A very long line of text that gets cut</div>` }),
+  css("word-break", "Text", "How words break at the edge: normal, break-all, keep-all. overflow-wrap: anywhere is often gentler.",
+    `word-break: break-all;`, "break long word overflow-wrap wrap url",
+    { demo: `<div class="sample" style="word-break:break-all;width:120px">Supercalifragilisticexpialidocious</div>` }),
+  css("list-style", "Text", "Bullet style and position of list items: disc, square, decimal, none.",
+    `list-style: square inside;`, "bullets ul ol marker none",
+    { demo: `<ul style="list-style:square inside;margin:0;padding:0"><li>One</li><li>Two</li></ul>` }),
+  css("columns", "Text", "Flows text into multiple columns.",
+    `columns: 2;\ncolumn-gap: 20px;`, "multi-column newspaper",
+    { demo: `<div style="columns:2;column-gap:20px">Text can flow into several columns like a newspaper, which is handy for long lists or articles on wide screens.</div>` }),
+  css("-webkit-line-clamp", "Text", "Cuts text off after a set number of lines, with an ellipsis.",
+    `display: -webkit-box;\n-webkit-line-clamp: 2;\n-webkit-box-orient: vertical;\noverflow: hidden;`, "truncate lines ellipsis clamp multiline",
+    { demo: `<div class="sample" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">This paragraph has quite a lot of text, and it is limited to only two lines, so the rest of it never shows up on the page.</div>` }),
+  css("text-wrap", "Text", "text-wrap: balance evens out line lengths in headings. pretty avoids lonely last words.",
+    `text-wrap: balance;`, "balance headings pretty orphans",
+    { demo: `<h3 class="sample" style="text-wrap:balance;margin:0">A heading that wraps onto more than one line</h3>` }),
+
+  // ----- Background & effects -----
+  css("background-color", "Effects", "Fills the background with a color.",
+    `background-color: #fde68a;`, "fill bg colour"),
+  css("background", "Effects", "Background shorthand: color, image, position / size, repeat.",
+    `background: url(pic.png) no-repeat center / cover;`, "image bg shorthand",
+    { demo: `<div class="sample" style="height:56px;background:url(${IMG}) no-repeat center / cover"></div>` }),
+  css("background-size", "Effects", "How a background image is sized: cover, contain, or explicit lengths.",
+    `background-size: contain;`, "cover contain image scale",
+    { demo: `<div class="sample" style="height:56px;background:url(${IMG}) no-repeat center;background-size:contain"></div>` }),
+  css("background-repeat", "Effects", "Whether a background image tiles: repeat, no-repeat, repeat-x, repeat-y.",
+    `background-repeat: repeat-x;`, "tile pattern image",
+    { demo: `<div class="sample" style="height:56px;background:url(${IMG}) repeat-x"></div>` }),
+  css("linear-gradient()", "Effects", "A background that fades between colors along a line.",
+    `background: linear-gradient(90deg, tomato, gold);`, "gradient fade blend colors"),
+  css("radial-gradient()", "Effects", "A background that fades outward from a point.",
+    `background: radial-gradient(circle, gold, tomato);`, "gradient circle glow"),
+  css("conic-gradient()", "Effects", "A background that sweeps around a center, like a pie chart.",
+    `background: conic-gradient(tomato, gold, seagreen, tomato);\nborder-radius: 50%;\nwidth: 70px;\nheight: 70px;`, "gradient pie wheel color"),
+  css("opacity", "Effects", "Transparency of an element and its children, 0 to 1.",
+    `opacity: .4;`, "transparent fade see through"),
+  css("filter", "Effects", "Visual effects: blur(), brightness(), grayscale(), drop-shadow(), and more.",
+    `filter: blur(2px) grayscale(50%);`, "blur grayscale brightness contrast effect"),
+  css("backdrop-filter", "Effects", "Blurs or tints whatever is behind an element, for frosted glass.",
+    `backdrop-filter: blur(6px);\nbackground: rgba(255,255,255,.25);`, "frosted glass blur behind",
+    { demo: `<div style="background:linear-gradient(90deg,tomato,gold);padding:14px"><div class="sample" style="backdrop-filter:blur(6px);background:rgba(255,255,255,.25)">frosted glass</div></div>` }),
+  css("clip-path", "Effects", "Crops an element to a shape: circle(), polygon(), inset().",
+    `clip-path: circle(40%);`, "crop shape polygon circle mask"),
+  css("cursor", "Effects", "The mouse cursor over an element: pointer, grab, not-allowed, text, crosshair.",
+    `cursor: pointer;`, "mouse pointer hand hover", { note: "Hover the preview to see it." }),
+  css("pointer-events", "Effects", "pointer-events: none makes an element ignore clicks so they pass through.",
+    `pointer-events: none;`, "click through ignore mouse disable", { nr: "Behavior only. No live preview, code only." }),
+  css("user-select", "Effects", "user-select: none stops text from being selected. Handy for game UI and buttons.",
+    `user-select: none;`, "select text disable copy", { nr: "Behavior only. No live preview, code only." }),
+  css("resize", "Effects", "Lets the user drag to resize an element. Needs overflow other than visible.",
+    `resize: both;\noverflow: auto;\nwidth: 140px;`, "drag handle textarea resizable",
+    { demo: `<div class="sample" style="resize:both;overflow:auto;width:140px">Drag the corner</div>` }),
+  css("accent-color", "Effects", "Tints built-in form controls like checkboxes, radios, and sliders.",
+    `accent-color: tomato;`, "checkbox radio range form color",
+    { demo: `<input type="checkbox" checked style="accent-color:tomato"> <input type="range" style="accent-color:tomato">` }),
+  css("caret-color", "Effects", "Color of the blinking text cursor in inputs.",
+    `caret-color: tomato;`, "cursor input text blink",
+    { demo: `<input value="Click and type" style="caret-color:tomato">` }),
+
+  // ----- Motion -----
+  css("transition", "Motion", "Animates a change between two states, like on :hover. Values: property, duration, easing, delay.",
+    `transition: all .4s ease;`, "animate hover smooth ease duration",
+    { demo: `<div class="sample d-hover" style="transition:all .4s ease">Hover me</div>`, note: "Put transition on the base element and the changed values on :hover." }),
+  css("transform", "Motion", "Moves, rotates, scales, or skews an element without affecting layout. Functions: translate(), rotate(), scale(), skew().",
+    `transform: rotate(4deg) scale(1.05);`, "rotate scale translate skew move flip"),
+  css("animation", "Motion", "Runs a @keyframes animation: name, duration, timing, delay, iteration count.",
+    `animation: pulse 1s ease-in-out infinite;`, "keyframes loop spin pulse bounce",
+    { demo: `<div class="sample" style="animation:d-pulse 1s ease-in-out infinite">Pulsing</div>` }),
+  css("@keyframes", "Motion", "Defines the steps of an animation by percentage, or from and to.",
+    `@keyframes pulse {\n  0%, 100% { opacity: 1; }\n  50%      { opacity: .3; }\n}`, "animation steps frames",
+    { nr: "Pair it with the animation property above." }),
+  css("scroll-behavior", "Motion", "scroll-behavior: smooth makes anchor links and scrollTo glide instead of jump.",
+    `html { scroll-behavior: smooth; }`, "smooth scroll anchor", { nr: "Page-level. No live preview, code only." }),
+  css("scroll-snap-type", "Motion", "Makes scrolling lock onto child positions, like a carousel.",
+    `.row { scroll-snap-type: x mandatory; overflow-x: auto; }\n.row > * { scroll-snap-align: start; }`, "carousel snap slider",
+    { nr: "Needs scrolling content. No live preview, code only." }),
+  css("will-change", "Motion", "Hints which property will animate so the browser can optimize. Use sparingly.",
+    `will-change: transform;`, "performance optimize gpu", { nr: "Performance hint. No live preview, code only." }),
+
+  // ----- Selectors -----
+  css(".class", "Selectors", "Selects elements with a matching class attribute.", `.card { padding: 8px; }`, "class dot selector", { nr: "Selector. No live preview, code only." }),
+  css("#id", "Selectors", "Selects the one element with a matching id.", `#header { height: 60px; }`, "id hash selector", { nr: "Selector. No live preview, code only." }),
+  css("element", "Selectors", "Selects every element of that tag name.", `p { margin: 0; }`, "type tag selector", { nr: "Selector. No live preview, code only." }),
+  css("*", "Selectors", "Universal selector: every element.", `* { box-sizing: border-box; }`, "universal all star", { nr: "Selector. No live preview, code only." }),
+  css("A B (descendant)", "Selectors", "Selects B anywhere inside A.", `nav a { color: white; }`, "descendant space nested inside", { nr: "Selector. No live preview, code only." }),
+  css("A > B (child)", "Selectors", "Selects B only when it is a direct child of A.", `ul > li { margin: 0; }`, "child direct combinator", { nr: "Selector. No live preview, code only." }),
+  css("A + B (adjacent)", "Selectors", "Selects B when it comes immediately after A.", `h2 + p { font-weight: bold; }`, "adjacent sibling next combinator", { nr: "Selector. No live preview, code only." }),
+  css("A ~ B (general sibling)", "Selectors", "Selects every B that comes after A at the same level.", `h2 ~ p { color: gray; }`, "sibling following combinator", { nr: "Selector. No live preview, code only." }),
+  css("[attribute]", "Selectors", "Selects by attribute: [type], [type=\"text\"], [href^=\"https\"], [class*=\"btn\"].", `input[type="checkbox"] { margin: 0; }`, "attribute selector brackets starts ends contains", { nr: "Selector. No live preview, code only." }),
+  css(":hover", "Selectors", "When the mouse is over the element.", `a:hover { color: tomato; }`, "mouse over pseudo-class", { nr: "Selector. No live preview, code only." }),
+  css(":focus / :focus-visible", "Selectors", "When the element has keyboard focus. :focus-visible shows only for keyboard users.", `button:focus-visible { outline: 2px solid gold; }`, "keyboard focus pseudo-class accessibility", { nr: "Selector. No live preview, code only." }),
+  css(":active", "Selectors", "While the element is being pressed.", `button:active { transform: scale(.97); }`, "pressed click pseudo-class", { nr: "Selector. No live preview, code only." }),
+  css(":first-child / :last-child", "Selectors", "First or last child among its siblings.", `li:last-child { border: 0; }`, "first last child pseudo-class", { nr: "Selector. No live preview, code only." }),
+  css(":nth-child()", "Selectors", "Selects by position: 2, odd, even, 3n, 3n+1.", `tr:nth-child(even) { background: #eee; }`, "zebra stripes odd even position nth-of-type", { nr: "Selector. No live preview, code only." }),
+  css(":not()", "Selectors", "Selects elements that do NOT match.", `li:not(.done) { font-weight: bold; }`, "exclude negation pseudo-class", { nr: "Selector. No live preview, code only." }),
+  css(":is() / :where()", "Selectors", "Matches any selector in a list. Shortens repetitive selectors. :where has zero specificity.", `:is(h1, h2, h3) { margin: 0; }`, "group list shorten specificity", { nr: "Selector. No live preview, code only." }),
+  css(":has()", "Selectors", "The parent selector: matches an element that contains a match.", `.card:has(img) { padding: 0; }`, "parent selector contains", { nr: "Selector. No live preview, code only." }),
+  css(":checked / :disabled", "Selectors", "Form states: checked boxes, disabled controls. Also :required, :invalid.", `input:checked + label { font-weight: bold; }`, "form state checkbox radio invalid required", { nr: "Selector. No live preview, code only." }),
+  css(":focus-within", "Selectors", "Matches a container when anything inside it has focus.", `.field:focus-within { border-color: gold; }`, "focus container form", { nr: "Selector. No live preview, code only." }),
+  css("::before / ::after", "Selectors", "Inserts generated content before or after an element's content. Needs the content property.", `.tag::before { content: "# "; }`, "pseudo-element content generated icon", { nr: "Selector. No live preview, code only." }),
+  css("::placeholder", "Selectors", "Styles the placeholder text in an input.", `input::placeholder { color: gray; }`, "input hint pseudo-element", { nr: "Selector. No live preview, code only." }),
+  css("::selection", "Selectors", "Styles text the user has highlighted.", `::selection { background: gold; }`, "highlight selected text pseudo-element", { nr: "Selector. No live preview, code only." }),
+  css(":root", "Selectors", "The top-level element (html). The usual home for CSS variables.", `:root { --accent: tomato; }`, "variables custom properties global", { nr: "Selector. No live preview, code only." }),
+  css("content", "Selectors", "The text or image a ::before or ::after pseudo-element inserts. Use content: \"\" for empty decorations.", `.tag::after { content: " (new)"; }`, "pseudo-element generated text before after", { nr: "Works with ::before and ::after. No live preview, code only." }),
+
+  // ----- At-rules & values -----
+  css("@media", "At-rules & values", "Applies styles only when a condition is true: screen width, dark mode, reduced motion.",
+    `@media (max-width: 600px) {\n  .grid { grid-template-columns: 1fr; }\n}\n@media (prefers-color-scheme: dark) {\n  body { background: #111; }\n}`, "responsive mobile breakpoint dark mode width query",
+    { nr: "Conditional. No live preview, code only." }),
+  css("@font-face", "At-rules & values", "Loads a custom font file.",
+    `@font-face {\n  font-family: "MyFont";\n  src: url("myfont.woff2") format("woff2");\n}`, "custom font woff2 load web font",
+    { nr: "Needs a font file. No live preview, code only." }),
+  css("@import", "At-rules & values", "Pulls in another stylesheet. Must come first in the file.",
+    `@import url("other.css");`, "include stylesheet", { nr: "No live preview, code only." }),
+  css("@supports", "At-rules & values", "Applies styles only if the browser supports a feature.",
+    `@supports (display: grid) {\n  .layout { display: grid; }\n}`, "feature query fallback", { nr: "Conditional. No live preview, code only." }),
+  css("@container", "At-rules & values", "Applies styles based on the size of a container instead of the whole screen.",
+    `.card-wrap { container-type: inline-size; }\n@container (min-width: 400px) {\n  .card { display: flex; }\n}`, "container query responsive component", { nr: "Conditional. No live preview, code only." }),
+  css("var() / --custom-property", "At-rules & values", "CSS variables. Define with --name, use with var(--name, fallback).",
+    `:root { --accent: tomato; }\n.btn { background: var(--accent); }`, "variable custom property theme token", { nr: "Values only. No live preview, code only." }),
+  css("calc()", "At-rules & values", "Does math with mixed units. Spaces around + and - are required.",
+    `width: calc(100% - 40px);`, "math width subtract add mix units",
+    { demo: `<div class="sample" style="width:calc(100% - 40px)">calc(100% - 40px)</div>` }),
+  css("clamp() / min() / max()", "At-rules & values", "clamp(min, ideal, max) keeps a value within limits, great for fluid type.",
+    `font-size: clamp(1rem, 2.5vw, 2rem);`, "fluid responsive size limit",
+    { demo: `<div class="sample" style="font-size:clamp(1rem, 4vw, 1.6rem)">Fluid text size</div>` }),
+  css("Units (px, rem, %, vw, vh)", "At-rules & values", "px is fixed, rem scales with the root font size, em with the parent, % with the parent, vw and vh with the viewport.",
+    `width: 50vw;\nheight: 100vh;\nfont-size: 1.25rem;`, "px em rem percent viewport vw vh vmin dvh length", { nr: "Values only. No live preview, code only." }),
+  css("Colors (hex, rgb, hsl)", "At-rules & values", "Color formats: #c2410c, rgb(194 65 12), hsl(20 88% 40%). Add a slash for alpha: rgb(0 0 0 / 50%).",
+    `color: #c2410c;\ncolor: rgb(194 65 12 / 50%);\ncolor: hsl(20 88% 40%);`, "hex rgb rgba hsl alpha color format", { demo: `<span class="sample" style="color:#c2410c">#c2410c</span> <span class="sample" style="color:rgb(194 65 12 / 50%)">50% alpha</span>` }),
+  css("!important", "At-rules & values", "Forces a declaration to win over others. Use as a last resort.",
+    `color: red !important;`, "override priority specificity", { nr: "Cascade rule. No live preview, code only." }),
+  css("color-scheme", "At-rules & values", "Tells the browser the page supports light and/or dark, so built-in controls match.",
+    `:root { color-scheme: light dark; }`, "dark mode light form controls", { nr: "Page-level. No live preview, code only." })
+];
+
+// ===================== JavaScript =====================
+const JS_DATA = [
+  // ----- Select -----
+  js("document.getElementById()", "Select", "Finds one element by its id. Returns null if none.",
+    `const el = document.getElementById("app");`, "find element id get"),
+  js("document.querySelector()", "Select", "Returns the first element matching a CSS selector, or null.",
+    `const btn = document.querySelector(".btn");`, "find css selector first class"),
+  js("document.querySelectorAll()", "Select", "Returns every match as a static NodeList. Use forEach on it, or Array.from for map and filter.",
+    `document.querySelectorAll("li").forEach(li => {\n  console.log(li.textContent);\n});`, "find all css selector list loop"),
+  js("getElementsByClassName() / TagName()", "Select", "Returns a live HTMLCollection of matches. Older API, still handy.",
+    `const boxes = document.getElementsByClassName("box");\nconst links = document.getElementsByTagName("a");`, "class tag name collection live"),
+  js("element.closest()", "Select", "Finds the nearest ancestor (or the element itself) that matches a selector.",
+    `const row = event.target.closest("tr");`, "ancestor parent find up delegation"),
+  js("element.matches()", "Select", "Tests whether an element matches a selector.",
+    `if (el.matches(".active")) {\n  console.log("active");\n}`, "test selector check"),
+
+  // ----- Modify -----
+  js("document.createElement()", "Modify", "Creates a new element in memory. Add it to the page with append or appendChild.",
+    `const li = document.createElement("li");\nli.textContent = "New item";\nlist.appendChild(li);`, "create new element add build"),
+  js("append() / prepend()", "Modify", "Adds nodes or text at the end or start of an element. Accepts several arguments.",
+    `parent.append(a, "text", b);\nparent.prepend(header);`, "add insert child end start"),
+  js("appendChild() / insertBefore()", "Modify", "Older ways to add a child. insertBefore places it ahead of a reference node.",
+    `parent.appendChild(child);\nparent.insertBefore(child, parent.firstChild);`, "add insert child"),
+  js("before() / after()", "Modify", "Inserts nodes next to an element, as siblings.",
+    `el.before(newEl);\nel.after(otherEl);`, "insert sibling next"),
+  js("element.remove()", "Modify", "Removes the element from the page.",
+    `el.remove();`, "delete detach"),
+  js("replaceWith()", "Modify", "Replaces an element with another node.",
+    `oldEl.replaceWith(newEl);`, "swap change"),
+  js("cloneNode()", "Modify", "Copies an element. Pass true to copy its children too.",
+    `const copy = el.cloneNode(true);`, "copy duplicate deep"),
+  js("textContent", "Modify", "Gets or sets an element's text. Safe from HTML injection.",
+    `el.textContent = "Hello";`, "text set get safe innerText"),
+  js("innerHTML", "Modify", "Gets or sets an element's HTML as a string. Never use it with untrusted input.",
+    `el.innerHTML = "<b>Bold</b> text";`, "html string set get render xss"),
+  js("insertAdjacentHTML()", "Modify", "Inserts an HTML string at a position without rebuilding the element: beforebegin, afterbegin, beforeend, afterend.",
+    `list.insertAdjacentHTML("beforeend", "<li>Item</li>");`, "html string add append position"),
+  js("setAttribute() / getAttribute()", "Modify", "Sets, reads, removes, or checks an attribute. Also removeAttribute and hasAttribute.",
+    `el.setAttribute("title", "Hi");\nel.getAttribute("title");\nel.removeAttribute("title");\nel.hasAttribute("title");`, "attribute set get remove has"),
+  js("element.dataset", "Modify", "Reads and writes data-* attributes as properties. data-user-id becomes dataset.userId.",
+    `el.dataset.id = "42";\nconsole.log(el.dataset.id);`, "data attribute custom store"),
+  js("classList", "Modify", "Adds, removes, toggles, or checks CSS classes.",
+    `el.classList.add("on");\nel.classList.remove("on");\nel.classList.toggle("on");\nel.classList.contains("on");`, "class add remove toggle contains css"),
+  js("element.style", "Modify", "Sets inline styles from JavaScript. Use camelCase names, or setProperty for CSS variables.",
+    `el.style.backgroundColor = "tomato";\nel.style.setProperty("--size", "10px");`, "inline css set color"),
+  js("getComputedStyle()", "Modify", "Reads the final applied CSS values of an element.",
+    `const w = getComputedStyle(el).width;`, "css computed read style"),
+  js("input.value / checkbox.checked", "Modify", "Reads or sets what's in a form control.",
+    `const name = input.value;\nconst on = checkbox.checked;\nselect.value = "heat";`, "form input read get set field"),
+  js("focus() / blur() / click()", "Modify", "Programmatically focus an element, remove focus, or trigger a click.",
+    `input.focus();\nbtn.click();\nbtn.disabled = true;`, "focus click disable button"),
+
+  // ----- Events -----
+  js("addEventListener()", "Events", "Runs a function when an event happens on an element.",
+    `btn.addEventListener("click", (e) => {\n  console.log("clicked", e.target);\n});`, "event listener handler click on"),
+  js("removeEventListener()", "Events", "Removes a listener. Needs the same function reference that was added.",
+    `function onClick() {}\nbtn.addEventListener("click", onClick);\nbtn.removeEventListener("click", onClick);`, "off unbind remove listener"),
+  js("event.preventDefault()", "Events", "Stops the browser's default action, like a form submit or link navigation.",
+    `form.addEventListener("submit", (e) => {\n  e.preventDefault();\n});`, "stop default submit link"),
+  js("event.stopPropagation()", "Events", "Stops the event from bubbling up to parent elements.",
+    `child.addEventListener("click", (e) => e.stopPropagation());`, "bubble stop propagation"),
+  js("event.target vs currentTarget", "Events", "target is the element that was clicked. currentTarget is the element the listener is attached to.",
+    `list.addEventListener("click", (e) => {\n  console.log(e.target, e.currentTarget);\n});`, "target current which element"),
+  js("Event delegation", "Events", "One listener on a parent handles events for many children, including ones added later.",
+    `list.addEventListener("click", (e) => {\n  const li = e.target.closest("li");\n  if (li) console.log(li.textContent);\n});`, "delegate parent many children dynamic"),
+  js("DOMContentLoaded / load", "Events", "DOMContentLoaded fires when the HTML is parsed. load fires when images and everything else finish too.",
+    `document.addEventListener("DOMContentLoaded", () => {\n  init();\n});`, "ready onload start init"),
+  js("input / change events", "Events", "input fires on every keystroke. change fires when the value is committed.",
+    `field.addEventListener("input", (e) => {\n  console.log(e.target.value);\n});`, "typing keystroke text field"),
+  js("keydown / keyup", "Events", "Keyboard events. Use e.key for the character or e.code for the physical key.",
+    `document.addEventListener("keydown", (e) => {\n  if (e.key === "Escape") close();\n  if (e.code === "Space") jump();\n});`, "keyboard key press escape space enter arrow wasd"),
+  js("Mouse events", "Events", "click, dblclick, mousedown, mouseup, mousemove, mouseenter, mouseleave, contextmenu.",
+    `canvas.addEventListener("mousemove", (e) => {\n  console.log(e.clientX, e.clientY);\n});`, "mouse move position click cursor"),
+  js("Pointer events", "Events", "Unified mouse, touch, and pen events: pointerdown, pointermove, pointerup.",
+    `el.addEventListener("pointerdown", (e) => {\n  el.setPointerCapture(e.pointerId);\n});`, "touch pen mouse drag mobile"),
+  js("submit event", "Events", "Fires when a form is submitted. Read fields with FormData.",
+    `form.addEventListener("submit", (e) => {\n  e.preventDefault();\n  const data = Object.fromEntries(new FormData(form));\n});`, "form submit data"),
+  js("resize / scroll events", "Events", "Fire when the window resizes or an element scrolls. Add { passive: true } for scroll.",
+    `window.addEventListener("resize", () => {\n  console.log(innerWidth, innerHeight);\n});\nwindow.addEventListener("scroll", onScroll, { passive: true });`, "window size scroll passive"),
+  js("Listener options", "Events", "once runs a listener a single time. passive promises not to call preventDefault. capture listens during the capture phase.",
+    `el.addEventListener("click", fn, { once: true });`, "once passive capture options"),
+  js("CustomEvent / dispatchEvent()", "Events", "Create and fire your own events.",
+    `el.addEventListener("score", (e) => console.log(e.detail));\nel.dispatchEvent(new CustomEvent("score", { detail: 10 }));`, "custom event emit fire trigger"),
+  js("IntersectionObserver", "Events", "Tells you when an element enters or leaves the viewport. Good for lazy loading and scroll animations.",
+    `const io = new IntersectionObserver((entries) => {\n  entries.forEach(en => {\n    if (en.isIntersecting) en.target.classList.add("show");\n  });\n});\nio.observe(el);`, "visible viewport lazy scroll reveal observer"),
+
+  // ----- Traversal -----
+  js("parentElement / children", "Traversal", "Move up to the parent or down to child elements.",
+    `el.parentElement;\nel.children;\nel.firstElementChild;\nel.lastElementChild;`, "parent child first last dom tree"),
+  js("nextElementSibling / previousElementSibling", "Traversal", "Move sideways to neighboring elements.",
+    `el.nextElementSibling;\nel.previousElementSibling;`, "sibling next previous neighbor"),
+  js("childNodes vs children", "Traversal", "childNodes includes text and comment nodes. children includes only elements.",
+    `el.childNodes.length;\nel.children.length;`, "nodes elements text"),
+  js("element.contains()", "Traversal", "True if one element is inside another.",
+    `if (menu.contains(e.target)) return;`, "inside descendant click outside"),
+  js("Array.from(nodeList)", "Traversal", "Turns a NodeList or HTMLCollection into a real array so you can use map, filter, and more.",
+    `const items = Array.from(document.querySelectorAll("li"));`, "nodelist convert spread array"),
+
+  // ----- Size & scroll -----
+  js("getBoundingClientRect()", "Size & scroll", "An element's size and position relative to the viewport: x, y, width, height, top, left, right, bottom.",
+    `const r = el.getBoundingClientRect();\nconsole.log(r.top, r.width);`, "position size rect offset bounds"),
+  js("offsetWidth / clientWidth", "Size & scroll", "Element size in pixels. offsetWidth includes borders, clientWidth doesn't. Same for Height.",
+    `el.offsetWidth;\nel.clientHeight;\nel.scrollHeight;`, "width height size pixels scrollheight"),
+  js("window.innerWidth / innerHeight", "Size & scroll", "Viewport size in pixels.",
+    `const w = window.innerWidth;\nconst h = window.innerHeight;`, "viewport window size screen"),
+  js("scrollTo() / scrollIntoView()", "Size & scroll", "Scrolls the window or brings an element into view.",
+    `window.scrollTo({ top: 0, behavior: "smooth" });\nel.scrollIntoView({ behavior: "smooth" });`, "scroll top smooth jump"),
+  js("window.scrollY", "Size & scroll", "How far the page has scrolled vertically, in pixels.",
+    `if (window.scrollY > 200) header.classList.add("small");`, "scroll position offset"),
+  js("matchMedia()", "Size & scroll", "Tests a CSS media query from JavaScript.",
+    `const dark = matchMedia("(prefers-color-scheme: dark)").matches;`, "media query dark mobile responsive"),
+  js("devicePixelRatio", "Size & scroll", "Physical pixels per CSS pixel. Use it to keep canvas sharp on high-DPI screens.",
+    `const dpr = window.devicePixelRatio || 1;`, "retina hidpi sharp scale canvas"),
+
+  // ----- Timing -----
+  js("setTimeout() / clearTimeout()", "Timing", "Runs a function once after a delay in milliseconds.",
+    `const id = setTimeout(() => console.log("later"), 1000);\nclearTimeout(id);`, "delay wait later once timer"),
+  js("setInterval() / clearInterval()", "Timing", "Runs a function repeatedly at an interval.",
+    `const id = setInterval(tick, 1000);\nclearInterval(id);`, "repeat loop timer every"),
+  js("requestAnimationFrame()", "Timing", "Calls your function before the next screen repaint, about 60 times a second. The right way to animate.",
+    `function frame(t) {\n  draw();\n  requestAnimationFrame(frame);\n}\nrequestAnimationFrame(frame);`, "animation loop game frame raf 60fps"),
+  js("performance.now() / Date.now()", "Timing", "performance.now() gives precise milliseconds since page load. Date.now() gives milliseconds since 1970.",
+    `const start = performance.now();\nconst stamp = Date.now();`, "time milliseconds timestamp measure"),
+  js("new Date()", "Timing", "Dates and times. Read parts with getFullYear, getMonth (0 to 11), getDate, getHours.",
+    `const d = new Date();\nd.getFullYear();\nd.toLocaleDateString();`, "date time today year month format"),
+
+  // ----- Storage & URL -----
+  js("localStorage", "Storage & URL", "Saves strings in the browser that survive reloads. Same site only.",
+    `localStorage.setItem("score", "42");\nconst s = localStorage.getItem("score");\nlocalStorage.removeItem("score");`, "save persist store browser high score"),
+  js("JSON.stringify() / JSON.parse()", "Storage & URL", "Converts objects to text and back. Needed to store objects in localStorage.",
+    `const text = JSON.stringify({ hp: 10 });\nconst obj = JSON.parse(text);`, "json object string serialize convert save"),
+  js("sessionStorage", "Storage & URL", "Like localStorage but cleared when the tab closes.",
+    `sessionStorage.setItem("draft", "hello");`, "tab temporary session"),
+  js("location", "Storage & URL", "The current URL and navigation: href, search, hash, pathname, reload().",
+    `location.href;\nlocation.search;\nlocation.hash;\nlocation.reload();`, "url address navigate redirect query hash"),
+  js("URLSearchParams", "Storage & URL", "Reads and builds query strings.",
+    `const p = new URLSearchParams(location.search);\nconst room = p.get("room");`, "query string parameters url get"),
+  js("history.pushState()", "Storage & URL", "Changes the URL without reloading the page.",
+    `history.pushState({}, "", "/level-2");`, "url single page app spa back"),
+  js("navigator.clipboard", "Storage & URL", "Copies text to the clipboard. Needs a secure page (https or localhost) and usually a user click.",
+    `navigator.clipboard.writeText("copied!");`, "copy paste clipboard"),
+
+  // ----- Network & async -----
+  js("fetch() GET", "Network & async", "Requests a URL and returns a Promise. Read the body with response.json().",
+    `const res = await fetch("/api/items");\nconst data = await res.json();`, "http request api get load json ajax"),
+  js("fetch() POST", "Network & async", "Sends data to a server.",
+    `await fetch("/api/save", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({ name: "Danny" })\n});`, "post send upload api json"),
+  js("async / await", "Network & async", "Write Promise code that reads top to bottom. await only works inside an async function (or a module).",
+    `async function load() {\n  const res = await fetch(url);\n  return res.json();\n}`, "promise asynchronous wait"),
+  js("try / catch / finally", "Network & async", "Handles errors. finally runs either way.",
+    `try {\n  await load();\n} catch (err) {\n  console.error(err);\n} finally {\n  spinner.hidden = true;\n}`, "error handle exception fail"),
+  js("Promise.all()", "Network & async", "Waits for several Promises at once.",
+    `const [a, b] = await Promise.all([fetch(u1), fetch(u2)]);`, "parallel multiple wait promises"),
+  js("promise.then() / catch()", "Network & async", "The chained style of handling Promises.",
+    `fetch(url)\n  .then(r => r.json())\n  .then(d => console.log(d))\n  .catch(err => console.error(err));`, "promise chain callback"),
+  js("AbortController", "Network & async", "Cancels a fetch.",
+    `const ctrl = new AbortController();\nfetch(url, { signal: ctrl.signal });\nctrl.abort();`, "cancel timeout stop request"),
+  js("FormData", "Network & async", "Collects form fields, including files, for sending or reading.",
+    `const fd = new FormData(form);\nfd.get("email");`, "form fields upload file collect"),
+
+  // ----- Language -----
+  js("const / let / var", "Language", "const can't be reassigned. let can. Avoid var, it has odd scoping.",
+    `const max = 10;\nlet score = 0;\nscore += 5;`, "variable declare constant reassign"),
+  js("Arrow functions", "Language", "Short function syntax that keeps the surrounding this.",
+    `const add = (a, b) => a + b;\nconst square = n => n * n;`, "function lambda =>  shorthand"),
+  js("function", "Language", "Named function declaration.",
+    `function greet(name = "friend") {\n  return "Hi " + name;\n}`, "declare define return default parameter"),
+  js("Template literals", "Language", "Strings in backticks with embedded expressions and multiple lines.",
+    "const msg = `Score: ${score}`;\nconst html = `\n  <p>${msg}</p>\n`;", "string interpolation backtick format multiline"),
+  js("Destructuring", "Language", "Unpacks values from arrays or objects into variables.",
+    `const { x, y } = player;\nconst [first, second] = list;`, "unpack extract object array assign"),
+  js("Spread / rest (...)", "Language", "Spread copies or merges arrays and objects. Rest gathers leftover arguments.",
+    `const merged = [...a, ...b];\nconst copy = { ...obj, hp: 5 };\nfunction sum(...nums) {}`, "copy merge clone three dots"),
+  js("Optional chaining ?.", "Language", "Safely reads deep properties. Returns undefined instead of throwing.",
+    `const city = user?.address?.city;`, "safe null undefined property"),
+  js("Nullish coalescing ??", "Language", "Uses the right side only when the left is null or undefined (unlike ||, which also catches 0 and empty string).",
+    `const vol = settings.volume ?? 0.5;`, "default fallback null undefined or"),
+  js("Ternary ? :", "Language", "One-line if/else that returns a value.",
+    `const label = score > 10 ? "High" : "Low";`, "conditional if else inline"),
+  js("=== vs ==", "Language", "=== compares value and type. == converts types first and causes surprises. Prefer ===.",
+    `1 === "1"; // false\n1 == "1";  // true`, "equal compare strict loose"),
+  js("if / else / switch", "Language", "Branching logic.",
+    `if (hp <= 0) {\n  die();\n} else if (hp < 20) {\n  warn();\n}\nswitch (state) {\n  case "menu": showMenu(); break;\n  default: break;\n}`, "condition branch case"),
+  js("for / for...of / for...in", "Language", "for is the classic loop. for...of walks values of arrays. for...in walks object keys.",
+    `for (let i = 0; i < 5; i++) {}\nfor (const item of list) {}\nfor (const key in obj) {}`, "loop iterate while repeat"),
+  js("while / do...while", "Language", "Loops while a condition is true. break exits, continue skips ahead.",
+    `while (running) {\n  step();\n}`, "loop repeat break continue"),
+  js("class", "Language", "Blueprint for objects with a constructor and methods. extends inherits.",
+    `class Enemy {\n  constructor(hp) { this.hp = hp; }\n  hit(n) { this.hp -= n; }\n}\nconst e = new Enemy(50);`, "object oop constructor method extends inherit this"),
+  js("import / export (modules)", "Language", "Split code across files. Load with <script type=\"module\">.",
+    `// util.js\nexport function add(a, b) { return a + b; }\n\n// main.js\nimport { add } from "./util.js";`, "module es6 import export file split"),
+  js("typeof / truthy / falsy", "Language", "typeof gives a type name. Falsy values: false, 0, empty string, null, undefined, NaN. Everything else is truthy.",
+    `typeof 42;       // "number"\ntypeof "hi";     // "string"\nBoolean("");     // false`, "type check boolean coerce"),
+
+  // ----- Arrays -----
+  js("array.map()", "Arrays", "Returns a new array with each item transformed.",
+    `const doubled = [1, 2, 3].map(n => n * 2); // [2, 4, 6]`, "transform convert each new array"),
+  js("array.filter()", "Arrays", "Returns a new array with only items that pass a test.",
+    `const big = [1, 5, 10].filter(n => n > 3); // [5, 10]`, "keep remove search where"),
+  js("array.reduce()", "Arrays", "Boils an array down to one value, like a sum.",
+    `const total = [1, 2, 3].reduce((sum, n) => sum + n, 0); // 6`, "sum total accumulate fold combine"),
+  js("array.forEach()", "Arrays", "Runs a function for each item. Returns nothing.",
+    `list.forEach((item, i) => console.log(i, item));`, "loop each iterate"),
+  js("array.find() / findIndex()", "Arrays", "Returns the first matching item, or its index.",
+    `const hero = people.find(p => p.id === 7);\nconst i = people.findIndex(p => p.id === 7);`, "search first match lookup"),
+  js("array.some() / every()", "Arrays", "some is true if any item passes. every is true if all pass.",
+    `nums.some(n => n > 10);\nnums.every(n => n > 0);`, "any all test check boolean"),
+  js("array.includes() / indexOf()", "Arrays", "Checks whether a value is in the array. indexOf returns its position, or -1.",
+    `["a", "b"].includes("a"); // true\n["a", "b"].indexOf("b");  // 1`, "contains has exists search"),
+  js("push / pop / shift / unshift", "Arrays", "push and pop work on the end. unshift and shift work on the start.",
+    `list.push(4);\nlist.pop();\nlist.unshift(0);\nlist.shift();`, "add remove end start stack queue"),
+  js("slice() / splice()", "Arrays", "slice copies a piece without changing the array. splice removes or inserts in place.",
+    `list.slice(1, 3);\nlist.splice(2, 1);      // remove 1 item at index 2\nlist.splice(1, 0, "x"); // insert at index 1`, "cut remove insert copy part"),
+  js("array.sort()", "Arrays", "Sorts in place. Numbers need a compare function or they sort as text.",
+    `nums.sort((a, b) => a - b);\nnames.sort((a, b) => a.localeCompare(b));`, "order ascending descending compare"),
+  js("array.join() / concat() / flat()", "Arrays", "join makes a string. concat merges arrays. flat flattens nested arrays.",
+    `["a", "b"].join(", ");\n[1].concat([2]);\n[[1], [2]].flat();`, "string merge flatten combine"),
+  js("Array.from() / Array(n).fill()", "Arrays", "Build arrays from iterables or by length.",
+    `Array.from({ length: 5 }, (_, i) => i); // [0,1,2,3,4]\nnew Array(3).fill(0);                    // [0,0,0]`, "create range generate length init"),
+  js("array.at() / reverse()", "Arrays", "at(-1) gets the last item. reverse flips in place.",
+    `list.at(-1);\nlist.reverse();`, "last item negative index"),
+
+  // ----- Objects, strings & math -----
+  js("Object.keys() / values() / entries()", "Objects & data", "Lists an object's keys, values, or key-value pairs.",
+    `Object.keys(obj);\nObject.values(obj);\nObject.entries(obj); // [[k, v], ...]`, "loop properties list object"),
+  js("Object.assign() / spread", "Objects & data", "Copies or merges objects. The spread form is shorter.",
+    `const merged = { ...defaults, ...options };`, "merge copy clone combine"),
+  js("structuredClone()", "Objects & data", "Deep copies an object.",
+    `const deep = structuredClone(state);`, "deep copy clone"),
+  js("in / hasOwn / delete", "Objects & data", "Test for a key and remove one.",
+    `"hp" in player;\nObject.hasOwn(player, "hp");\ndelete player.hp;`, "key exists property remove"),
+  js("Map / Set", "Objects & data", "Map holds key-value pairs with any key type. Set holds unique values.",
+    `const m = new Map();\nm.set("a", 1);\nm.get("a");\nconst s = new Set([1, 1, 2]); // {1, 2}\ns.has(2);`, "dictionary unique collection dedupe"),
+  js("string.split() / join()", "Objects & data", "Break a string into an array, or join an array into a string.",
+    `"a,b,c".split(",");   // ["a","b","c"]\n["a","b"].join("-");  // "a-b"`, "string array separate delimiter"),
+  js("slice() / substring()", "Objects & data", "Cuts part of a string. Negative slice counts from the end.",
+    `"hello".slice(1, 3); // "el"\n"hello".slice(-2);   // "lo"`, "string cut part substring"),
+  js("replace() / replaceAll()", "Objects & data", "Replaces text. replace only changes the first match unless you use a regex with g.",
+    `"a-b-c".replaceAll("-", "+"); // "a+b+c"`, "string swap substitute change"),
+  js("trim / toUpperCase / includes", "Objects & data", "Common string helpers: trim, toUpperCase, toLowerCase, includes, startsWith, endsWith, padStart, repeat.",
+    `"  hi ".trim();\n"hi".toUpperCase();\n"hello".includes("ell");\n"5".padStart(3, "0"); // "005"`, "string case whitespace pad startswith endswith"),
+  js("Math.floor / ceil / round", "Objects & data", "Rounding: floor down, ceil up, round nearest, trunc drops decimals.",
+    `Math.floor(2.7); // 2\nMath.ceil(2.1);  // 3\nMath.round(2.5); // 3`, "round integer decimal down up"),
+  js("Math.random()", "Objects & data", "A random decimal from 0 up to (not including) 1. Scale it for ranges.",
+    `const roll = Math.floor(Math.random() * 6) + 1; // 1 to 6\nconst pick = list[Math.floor(Math.random() * list.length)];`, "random dice number range pick"),
+  js("Math.min / max / abs", "Objects & data", "Smallest, largest, and absolute value.",
+    `Math.max(1, 5, 3);\nMath.min(...list);\nMath.abs(-4);`, "minimum maximum absolute"),
+  js("Math.PI / sin / cos / atan2", "Objects & data", "Trigonometry, in radians. atan2(dy, dx) gives the angle toward a point.",
+    `const angle = Math.atan2(dy, dx);\nconst x = Math.cos(angle) * speed;\nconst deg = rad * 180 / Math.PI;`, "trig angle radians degrees rotate aim direction"),
+  js("Number(), parseInt(), toFixed()", "Objects & data", "Convert text to numbers and format decimals.",
+    `Number("42");\nparseInt("42px", 10);\nparseFloat("3.5");\n(3.14159).toFixed(2); // "3.14"`, "convert string number decimal format"),
+  js("isNaN / Number.isInteger", "Objects & data", "Check numbers.",
+    `Number.isNaN(NaN);\nNumber.isInteger(5);`, "nan not a number check"),
+  js("RegExp test / match", "Objects & data", "Pattern matching on strings.",
+    `/cat/i.test("Cat");        // true\n"a1b2".match(/[0-9]/g);   // ["1","2"]`, "regex regular expression pattern test match"),
+
+  // ----- Canvas & games -----
+  js("canvas.getContext(\"2d\")", "Canvas & games", "Gets the 2D drawing context. All drawing goes through it.",
+    `const canvas = document.getElementById("game");\nconst ctx = canvas.getContext("2d");`, "canvas setup draw context 2d start"),
+  js("fillRect / strokeRect / clearRect", "Canvas & games", "Draw or erase rectangles: x, y, width, height.",
+    `ctx.fillStyle = "tomato";\nctx.fillRect(10, 10, 50, 30);\nctx.clearRect(0, 0, canvas.width, canvas.height);`, "rectangle draw clear fill box"),
+  js("ctx.arc() circles", "Canvas & games", "Draws circles and arcs. Angles are in radians.",
+    `ctx.beginPath();\nctx.arc(x, y, 20, 0, Math.PI * 2);\nctx.fill();`, "circle draw ball arc round"),
+  js("ctx paths & lines", "Canvas & games", "Draw lines with beginPath, moveTo, lineTo, stroke.",
+    `ctx.beginPath();\nctx.moveTo(0, 0);\nctx.lineTo(100, 50);\nctx.strokeStyle = "white";\nctx.stroke();`, "line path draw stroke"),
+  js("ctx.fillText()", "Canvas & games", "Draws text on the canvas.",
+    `ctx.font = "20px sans-serif";\nctx.fillStyle = "white";\nctx.fillText("Score: 10", 10, 24);`, "text draw score font hud"),
+  js("ctx.drawImage()", "Canvas & games", "Draws an image or sprite. Wait for it to load first.",
+    `const img = new Image();\nimg.onload = () => ctx.drawImage(img, x, y);\nimg.src = "player.png";`, "sprite image draw load"),
+  js("ctx save / restore / translate / rotate", "Canvas & games", "Move and rotate the drawing origin, then restore it so other drawing isn't affected.",
+    `ctx.save();\nctx.translate(x, y);\nctx.rotate(angle);\nctx.fillRect(-10, -10, 20, 20);\nctx.restore();`, "transform rotate move sprite origin"),
+  js("Game loop (delta time)", "Canvas & games", "The standard loop: update with the time since the last frame, draw, repeat. Delta time keeps speed the same on any frame rate.",
+    `let last = 0;\nfunction loop(now) {\n  const dt = (now - last) / 1000; // seconds\n  last = now;\n  update(dt);\n  draw();\n  requestAnimationFrame(loop);\n}\nrequestAnimationFrame(loop);`, "loop update draw frame timestep dt fps"),
+  js("Keyboard state", "Canvas & games", "Track which keys are held so movement is smooth.",
+    `const keys = {};\naddEventListener("keydown", e => keys[e.code] = true);\naddEventListener("keyup", e => keys[e.code] = false);\n// in update: if (keys.KeyW) y -= speed * dt;`, "input held wasd movement controls keys"),
+  js("Rectangle collision (AABB)", "Canvas & games", "True when two axis-aligned rectangles overlap.",
+    `function hit(a, b) {\n  return a.x < b.x + b.w && a.x + a.w > b.x &&\n         a.y < b.y + b.h && a.y + a.h > b.y;\n}`, "collision overlap hitbox intersect aabb"),
+  js("Distance & circle collision", "Canvas & games", "Distance between two points. Circles collide when distance is less than the sum of radii.",
+    `const d = Math.hypot(b.x - a.x, b.y - a.y);\nconst hit = d < a.r + b.r;`, "distance circle collision hypot range"),
+  js("clamp / lerp / random range", "Canvas & games", "Three tiny helpers every game ends up needing.",
+    `const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));\nconst lerp = (a, b, t) => a + (b - a) * t;\nconst rand = (lo, hi) => lo + Math.random() * (hi - lo);`, "helper utility limit smooth interpolate random"),
+  js("Audio", "Canvas & games", "Plays a sound. Browsers require a user click before audio can start.",
+    `const snd = new Audio("boom.mp3");\nsnd.volume = 0.5;\nsnd.play();`, "sound effect music play mp3 sfx"),
+  js("Sharp canvas (high DPI)", "Canvas & games", "Scale the canvas backing store by devicePixelRatio so it isn't blurry.",
+    `const dpr = window.devicePixelRatio || 1;\ncanvas.width = w * dpr;\ncanvas.height = h * dpr;\ncanvas.style.width = w + "px";\ncanvas.style.height = h + "px";\nctx.scale(dpr, dpr);`, "retina blurry resolution scale"),
+  js("Three.js minimal scene", "Canvas & games", "The bare minimum: scene, camera, renderer, then a render loop.",
+    `const scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);\nconst renderer = new THREE.WebGLRenderer({ antialias: true });\nrenderer.setSize(innerWidth, innerHeight);\ndocument.body.appendChild(renderer.domElement);\nfunction animate() {\n  requestAnimationFrame(animate);\n  renderer.render(scene, camera);\n}\nanimate();`, "3d webgl scene camera renderer fps game"),
+
+  // ----- Debugging -----
+  js("console.log / warn / error", "Debugging", "Print to the browser dev tools console (F12).",
+    `console.log("value:", x);\nconsole.warn("careful");\nconsole.error("broke");`, "print debug output log"),
+  js("console.table()", "Debugging", "Prints arrays and objects as a table.",
+    `console.table(players);`, "print array object table"),
+  js("console.time()", "Debugging", "Times how long a block of code takes.",
+    `console.time("work");\nheavyThing();\nconsole.timeEnd("work");`, "timer performance measure speed"),
+  js("debugger", "Debugging", "Pauses execution at that line when dev tools are open.",
+    `debugger;`, "breakpoint pause stop inspect")
+];
+
+TAGS.forEach(t => { t.lang = t.lang || "html"; });
+TAGS.push(...CSS_DATA, ...JS_DATA);
+
+// ---- APP
+const LANGS = [["all", "All"], ["html", "HTML"], ["css", "CSS"], ["js", "JS"]];
+const LANG_LABEL = { html: "HTML", css: "CSS", js: "JS" };
+let activeLang = "all";
+const inLang = t => activeLang === "all" || t.lang === activeLang;
+const catsFor = () => ["All"].concat(Array.from(new Set(TAGS.filter(inLang).map(t => t.cat))));
+const $ = id => document.getElementById(id);
+const grid = $("grid"), qEl = $("q"), countEl = $("count"), emptyEl = $("empty");
+let activeCat = "All";
+
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const escRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+function hilite(text, terms, isTag) {
+  if (!terms.length) return esc(text);
+  const re = new RegExp((isTag ? "" : "(?<![A-Za-z0-9])") + "(" + terms.map(escRe).join("|") + ")", "gi");
+  return text.split(re).map((part, i) => i % 2 ? '<mark class="hit">' + esc(part) + "</mark>" : esc(part)).join("");
+}
+
+function parseTerms(raw) {
+  return raw.toLowerCase().replace(/[<>\/]/g, " ").split(/\s+/).filter(Boolean);
+}
+
+function matches(t, terms, bracketed) {
+  if (!terms.length) return true;
+  if (bracketed) return t.lang === "html" && [t.tag].concat(t.alias || []).some(n => n.indexOf(terms[0]) === 0);   // "<em>" searches tag names only
+  const rest = (t.def + " " + t.cat + " " + (t.look || "") + " " + (t.note || "") + " " + (t.kw || "")).toLowerCase();
+  return terms.every(term => t.tag.toLowerCase().indexOf(term) !== -1 || new RegExp("(?<![a-z0-9])" + escRe(term)).test(rest));
+}
+
+function score(t, terms) {
+  if (!terms.length) return 0;
+  let s = 0;
+  terms.forEach(term => {
+    const name = t.tag.toLowerCase();
+    if (name === term) s += 100;
+    else if (name.indexOf(term) === 0) s += 50;
+    else if (name.indexOf(term) !== -1) s += 20;
+  });
+  return -s;
+}
+
+const kidsHtml = n => Array.from({ length: n }, (_, i) => '<span class="k">' + (i + 1) + "</span>").join("");
+function demoHtml(t) {
+  if (t.lang === "js") return "";
+  if (t.nr) return '<div class="nrnote">' + (t.nr === true ? "Not visible on the page, so no live preview. Code only." : esc(t.nr)) + "</div>";
+  let d = t.demo;
+  if (!d && t.lang === "css") d = t.kids ? '<div style="' + esc(t.ex) + '">' + kidsHtml(t.kids) + "</div>"
+                                          : '<div class="sample" style="' + esc(t.ex) + '">Sample text</div>';
+  if (!d) d = t.ex;
+  return '<div class="demo">' + d + "</div>";
+}
+
+function cardHtml(t, terms) {
+  const src = t.ex;
+  return '<article class="card' + (t.obsolete ? " obsolete" : "") + '">' +
+    '<div class="head"><span class="tag">' + (t.lang === "html" ? "&lt;" + hilite(t.tag, terms, true) + "&gt;" : hilite(t.tag, terms, true)) + '</span>' +
+    '<span class="cat"><span class="lang">' + LANG_LABEL[t.lang] + "</span> &middot; " + esc(t.cat) + "</span>" +
+    (t.obsolete ? '<span class="badge">Obsolete</span>' : "") + "</div>" +
+    '<p class="def">' + hilite(t.def, terms) + "</p>" +
+    (t.look ? '<div class="look"><b>Default look:</b> ' + hilite(t.look, terms) + "</div>" : "") +
+    (t.note ? '<p class="note">' + hilite(t.note, terms) + "</p>" : "") +
+    demoHtml(t) +
+    '<div class="codebox"><pre class="src">' + esc(src) + '</pre><button class="copy" type="button" data-copy="' + esc(src) + '">Copy</button></div>' +
+    "</article>";
+}
+
+function render() {
+  const terms = parseTerms(qEl.value);
+  const bracketed = /[<>]/.test(qEl.value);
+  const list = TAGS.filter(t => inLang(t) && (activeCat === "All" || t.cat === activeCat) && matches(t, terms, bracketed))
+                   .sort((a, b) => score(a, terms) - score(b, terms));
+  grid.innerHTML = list.map(t => cardHtml(t, terms)).join("");
+  countEl.textContent = list.length + " of " + TAGS.filter(inLang).length + " entries";
+  emptyEl.style.display = list.length ? "none" : "block";
+  $("searchrow").classList.toggle("has-text", qEl.value.length > 0);
+}
+
+function buildChips() {
+  $("chips").innerHTML = catsFor().map(c =>
+    '<button type="button" class="chip" data-cat="' + esc(c) + '" aria-pressed="' + (c === activeCat) + '">' + esc(c) + "</button>").join("");
+}
+
+function buildTabs() {
+  $("tabs").innerHTML = LANGS.map(([id, label]) => {
+    const n = id === "all" ? TAGS.length : TAGS.filter(t => t.lang === id).length;
+    return '<button type="button" class="tab" role="tab" data-lang="' + id + '" aria-selected="' + (id === activeLang) + '">' + label + "<small>" + n + "</small></button>";
+  }).join("");
+}
+$("tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab");
+  if (!b) return;
+  activeLang = b.dataset.lang;
+  activeCat = "All";
+  buildTabs(); buildChips(); render();
+});
+
+$("chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (!b) return;
+  activeCat = b.dataset.cat;
+  buildChips();
+  render();
+});
+
+grid.addEventListener("click", e => {
+  const b = e.target.closest(".copy");
+  if (!b) return;
+  const text = b.dataset.copy;
+  const done = () => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1200); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+});
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); done(); } catch (err) {}
+  document.body.removeChild(ta);
+}
+
+grid.addEventListener("click", e => { if (e.target.closest(".demo a, .demo area")) e.preventDefault(); });
+grid.addEventListener("submit", e => e.preventDefault());
+qEl.addEventListener("input", render);
+$("clear").addEventListener("click", () => { qEl.value = ""; render(); qEl.focus(); });
+
+document.addEventListener("keydown", e => {
+  const ae = document.activeElement, typing = ae && (/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName) || ae.isContentEditable);
+  if (e.key === "/" && !typing) { e.preventDefault(); qEl.focus(); qEl.select(); }
+  else if (e.key === "Escape") { qEl.value = ""; render(); qEl.blur(); }
+});
+
+buildTabs();
+buildChips();
+render();
+qEl.focus();
+</script>
+</body>
+</html>
